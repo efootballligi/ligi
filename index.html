@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ligi ya eFootball</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,700..900&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5f2;--card:#fff;--ink:#12201a;--mute:#5a6b62;--line:#cfdcd3;--gold:#f2b705;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1712;--card:#15241c;--ink:#eaf2ec;--mute:#9db1a5;--line:#27402f}}
+:root[data-theme="dark"]{--bg:#0d1712;--card:#15241c;--ink:#eaf2ec;--mute:#9db1a5;--line:#27402f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Figtree,system-ui,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:16px 18px 48px}
+h1,h2{font-family:Archivo,Impact,sans-serif;font-stretch:80%;font-weight:900;line-height:1;margin:0}
+h1{font-size:clamp(40px,11vw,66px)}
+h2{font-size:26px;margin:34px 0 14px}
+.top{display:flex;align-items:center;gap:10px;min-height:44px}
+.top img{height:44px;width:auto;border-radius:8px}
+.top b{font-family:Archivo,sans-serif;font-stretch:80%;font-weight:900;font-size:20px}
+.hero{padding:20px 0 0}
+.hero p{max-width:34em;color:var(--mute);margin:12px 0 0}
+.th0{--c1:#0f5132;--c2:#34b27b}.th1{--c1:#1e40af;--c2:#3b82f6}.th2{--c1:#c2410c;--c2:#fb923c}.th3{--c1:#5b21b6;--c2:#a78bfa}
+.head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff}
+.pill{background:rgba(255,255,255,.2);border-radius:20px;padding:5px 12px;font-weight:600;font-size:14px}
+.pitch{background:linear-gradient(160deg,var(--c1),#0c1a13 130%);color:#fff;border-radius:16px;margin:22px 0 0;overflow:hidden}
+.pitch .in{padding:20px}
+.when{font-weight:600;opacity:.9}
+.prize{font-family:Archivo,sans-serif;font-stretch:80%;font-weight:900;font-size:42px;line-height:1;margin:6px 0 2px;color:var(--gold)}
+.row{display:flex;justify-content:space-between;gap:12px;font-size:14px;margin-top:14px}
+.bar{height:8px;background:rgba(255,255,255,.22);border-radius:4px;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:4px}
+button{font:600 16px Figtree,sans-serif;border:0;border-radius:10px;padding:13px 18px;cursor:pointer;background:var(--gold);color:#201700;min-height:48px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.pitch button{width:100%;margin-top:16px}
+.grid{display:grid;gap:14px}
+@media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card .in{padding:14px 16px 16px}
+.card h3{margin:0 0 4px;font-size:18px}
+.meta{color:var(--mute);font-size:14px;margin:0 0 12px}
+.card button{background:var(--c1);color:#fff;width:100%}
+.card.full button{background:var(--line);color:var(--mute);cursor:not-allowed}
+ol{padding-left:20px;margin:0}li{margin-bottom:8px}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);width:min(460px,94vw);max-height:90vh;overflow:auto;padding:20px}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog h2{font-size:22px;margin:0 0 6px}
+label{display:block;font-weight:600;margin:14px 0 4px;font-size:14px}
+input,select,textarea{width:100%;font:400 16px Figtree,sans-serif;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+.actions{display:flex;gap:10px;margin-top:18px}
+.ghost{background:transparent!important;border:1px solid var(--line);color:var(--ink)!important}
+.err{color:#c0392b;font-size:14px;min-height:20px;margin-top:8px}
+.pay{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:var(--bg)}
+.pay div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:15px}
+.pay span:first-child{color:var(--mute)}
+.num{font-family:Archivo,sans-serif;font-stretch:80%;font-weight:900;font-size:30px;letter-spacing:.02em;display:block;margin:6px 0 10px}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:8px}
+summary{font-weight:600;cursor:pointer;min-height:28px}
+details ol{margin-top:8px;font-size:14px}
+.note{font-size:13px;color:var(--mute);margin-top:10px}
+.radio{display:flex;gap:10px}.radio label{flex:1;margin:0;border:1px solid var(--line);border-radius:8px;padding:12px;text-align:center;font-weight:600}
+.radio input{width:auto;margin-right:6px}
+footer{color:var(--mute);font-size:13px;margin-top:32px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><img id="logo" src="logo.jpg" alt="" onerror="this.remove()"><b>Ligi ya eFootball</b></div>
+  <header class="hero">
+    <h1>Cheza. Shinda. Pata zawadi.</h1>
+    <p>Kila kombe lina timu 8. Jisajili, lipa ada, pata code ya room na ucheze.</p>
+  </header>
+
+  <section class="pitch" id="next" aria-live="polite"></section>
+
+  <h2>Mashindano yote</h2>
+  <div class="grid" id="list"></div>
+
+  <h2>Jinsi inavyofanya kazi</h2>
+  <ol>
+    <li>Chagua kombe na bonyeza Jiunge.</li>
+    <li>Lipa ada kwa maelekezo yatakayoonekana, kisha bonyeza Nimekamilisha.</li>
+    <li>Bandika meseji ya muamala na uthibitishe. WhatsApp itafunguka.</li>
+    <li>Admin atakupa code ya room baada ya kuthibitisha malipo.</li>
+    <li>Mshindi analipwa zawadi mara tu baada ya fainali.</li>
+  </ol>
+  <footer>Kwa watu wa miaka 18 na zaidi. Cheza kwa kuwajibika.</footer>
+</main>
+
+<dialog id="dlg">
+  <!-- Hatua 1: maelekezo ya kulipa -->
+  <div id="s-pay">
+    <h2 id="p-title"></h2>
+    <div class="meta" id="p-sub"></div>
+    <div class="pay">
+      <span style="color:var(--mute);font-size:14px">Namba ya kulipia (Tigo Pesa)</span>
+      <span class="num" id="p-num"></span>
+      <button class="ghost" id="copy" style="width:100%">Nakili namba</button>
+      <div style="margin-top:8px"><span>Jina la mpokeaji</span><b id="p-name"></b></div>
+      <div><span>Kiasi cha kutuma</span><b id="p-amt"></b></div>
+    </div>
+    <p class="note" style="margin:0 0 4px">Unaweza kutuma kutoka mtandao wowote. Chagua mtandao wako:</p>
+    <details><summary>Tigo Pesa</summary><ol>
+      <li>Piga <b>*150*01#</b></li><li>Chagua <b>Tuma Pesa</b></li><li>Chagua <b>Kwa Tigo Pesa</b> (Tigo kwenda Tigo)</li>
+      <li>Weka namba <b class="n"></b></li><li>Weka kiasi na PIN yako</li></ol></details>
+    <details><summary>M-Pesa (Vodacom)</summary><ol>
+      <li>Piga <b>*150*00#</b></li><li>Chagua <b>Tuma Pesa</b></li><li>Chagua <b>Mitandao Mingine</b>, kisha <b>Tigo Pesa</b></li>
+      <li>Weka namba <b class="n"></b></li><li>Weka kiasi na PIN yako</li></ol></details>
+    <details><summary>Airtel Money</summary><ol>
+      <li>Piga <b>*150*60#</b></li><li>Chagua <b>Tuma Pesa</b></li><li>Chagua <b>Mitandao Mingine</b>, kisha <b>Tigo Pesa</b></li>
+      <li>Weka namba <b class="n"></b></li><li>Weka kiasi na PIN yako</li></ol></details>
+    <details><summary>HaloPesa</summary><ol>
+      <li>Piga <b>*150*88#</b></li><li>Chagua <b>Tuma Pesa</b></li><li>Chagua <b>Mitandao Mingine</b>, kisha <b>Tigo Pesa</b></li>
+      <li>Weka namba <b class="n"></b></li><li>Weka kiasi na PIN yako</li></ol></details>
+    <p class="note">Hatua zinaweza kutofautiana kidogo kulingana na mtandao. Kabla ya kuweka PIN, hakikisha jina linaloonekana ni <b class="nm"></b>.</p>
+    <div class="actions">
+      <button class="ghost" data-close>Ghairi</button>
+      <button id="done" style="flex:1">Nimekamilisha kulipa</button>
+    </div>
+  </div>
+
+  <!-- Hatua 2: thibitisha malipo -->
+  <div id="s-confirm" hidden>
+    <h2>Thibitisha malipo</h2>
+    <div class="meta" id="c-sub"></div>
+    <label for="c-name">Jina lako au ID ya eFootball</label><input id="c-name">
+    <label for="c-phone">Namba uliyotumia kulipa</label><input id="c-phone" inputmode="tel" autocomplete="tel">
+    <label for="c-net">Mtandao uliotumia</label>
+    <select id="c-net"><option value="">Chagua mtandao</option><option>Tigo Pesa</option><option>M-Pesa</option><option>Airtel Money</option><option>HaloPesa</option><option>Mwingine</option></select>
+    <label for="c-sms">Bandika meseji ya muamala</label>
+    <textarea id="c-sms" placeholder="Bandika hapa meseji uliyopokea baada ya kutuma pesa"></textarea>
+    <div class="err" id="c-err" role="alert"></div>
+    <div class="actions">
+      <button class="ghost" id="back">Rudi</button>
+      <button id="c-send" style="flex:1">Thibitisha malipo</button>
+    </div>
+    <p class="note">Utapelekwa WhatsApp kutuma ujumbe huu kwa admin. Code ya room utapewa baada ya malipo kuthibitishwa.</p>
+  </div>
+
+  <!-- Kombe la bure -->
+  <div id="s-free" hidden>
+    <h2 id="f-title"></h2>
+    <div class="meta" id="f-sub"></div>
+    <label for="f-team">Jina la timu yako</label><input id="f-team">
+    <label for="f-phone">Namba ya kupokea zawadi</label><input id="f-phone" inputmode="tel" autocomplete="tel">
+    <label for="f-net">Mtandao wa namba hiyo</label>
+    <select id="f-net"><option value="">Chagua mtandao</option><option>Tigo Pesa</option><option>M-Pesa</option><option>Airtel Money</option><option>HaloPesa</option></select>
+    <label for="f-reg">Majina matatu ya usajili wa namba hiyo</label><input id="f-reg" autocomplete="name">
+    <label>Ukishinda utapokea zawadi kama:</label>
+    <div class="radio">
+      <label><input type="radio" name="prz" value="Pesa" checked>Pesa</label>
+      <label><input type="radio" name="prz" value="Vocha">Vocha</label>
+    </div>
+    <div class="err" id="f-err" role="alert"></div>
+    <div class="actions">
+      <button class="ghost" data-close>Ghairi</button>
+      <button id="f-send" style="flex:1">Jisajili kwa WhatsApp</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ============ BADILISHA HAPA ============ */
+var WHATSAPP = "255705974602";
+var PAY_NUMBER = "0705974602";
+var PAY_NAME = "DARIA SATORIA";
+var CUR = "TSh";
+var PRIZE_PERCENT = 0.7;  /* 70% ya ada zote ni zawadi */
+var FIRST_SHARE = 0.6;    /* wa 1 anapata 60% ya zawadi, wa 2 anapata 40% */
+/* fee:0 = bure (weka prize1/prize2 mwenyewe; prize2:0 = mshindi mmoja). filled = waliojiunga mpaka sasa. */
+var TOURNAMENTS = [
+  {title:"Kombe la Wazi", when:"Kila Jumatano, saa 2:00 usiku", fee:0, slots:8, filled:5, prize1:1200, prize2:0, format:"Mtoano, mechi 1 kwa 1"},
+  {title:"Kombe la Kila Siku", when:"Kila siku, saa 2:00 usiku", fee:1000, slots:8, filled:6, format:"Mtoano, mechi 1 kwa 1"},
+  {title:"Kombe la Wikendi", when:"Kila Jumamosi, saa 2:00 usiku", fee:2000, slots:8, filled:4, format:"Mtoano, mechi 1 kwa 1"},
+  {title:"Kombe Kuu la Mwezi (VIP)", when:"Mwisho wa kila mwezi, saa 3:00 usiku", fee:5000, slots:8, filled:3, format:"Mtoano, mechi 1 kwa 1"}
+];
+/* ======================================= */
+
+var G = 'fill="rgba(255,255,255,.28)"', S = 'fill="#ffd34d" stroke="none"';
+var TROPHIES = [
+  /* 0 kombe la kawaida */
+  '<path '+G+' d="M30 18h40v22c0 15-9 25-20 25S30 55 30 40z"/><path d="M30 26H18c0 14 6 20 14 22M70 26h12c0 14-6 20-14 22"/><path d="M50 65v12"/><path '+G+' d="M34 77h32v9H34z"/>',
+  /* 1 medali yenye utepe */
+  '<path '+G+' d="M30 6h16l6 28H36zM70 6H54l-6 28h14z"/><circle '+G+' cx="50" cy="62" r="24"/><polygon '+S+' points="50,48 54,57 64,58 56,64 59,74 50,68 41,74 44,64 36,58 46,57"/>',
+  /* 2 kombe lenye nyota */
+  '<path '+G+' d="M32 32h36v16c0 13-8 21-18 21S32 61 32 48z"/><path d="M32 38H22c0 11 5 16 12 18M68 38h10c0 11-5 16-12 18"/><path d="M50 69v8"/><path '+G+' d="M36 77h28v9H36z"/><polygon '+S+' points="50,4 54,14 65,14 56,20 60,30 50,24 40,30 44,20 35,14 46,14"/>',
+  /* 3 taji la ushindi */
+  '<path '+G+' d="M20 70L14 30l22 18 14-26 14 26 22-18-6 40z"/><path d="M20 80h60"/><circle '+S+' cx="14" cy="28" r="5"/><circle '+S+' cx="50" cy="18" r="5"/><circle '+S+' cx="86" cy="28" r="5"/>'
+];
+function trophy(i){return '<svg viewBox="0 0 100 92" width="64" height="60" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+TROPHIES[i]+'</svg>'}
+
+var $ = function(id){return document.getElementById(id)};
+var fmt = function(n){return CUR+" "+n.toLocaleString("en-US")};
+var feeText = function(t){return t.fee ? fmt(t.fee) : "Bure"};
+var cur = null, warned = false;
+
+function prizes(t){
+  if(t.prize1 != null) return [t.prize1, t.prize2];
+  var pool = t.fee*t.slots*PRIZE_PERCENT, p1 = Math.round(pool*FIRST_SHARE/100)*100;
+  return [p1, Math.round(pool)-p1];
+}
+function prizeLine(t){var q = prizes(t); return q[1] ? "wa 1 "+fmt(q[0])+" · wa 2 "+fmt(q[1]) : "mshindi "+fmt(q[0])}
+
+function step(id){["s-pay","s-confirm","s-free"].forEach(function(s){$(s).hidden = (s !== id)})}
+function openJoin(t){
+  cur = t; warned = false;
+  ["c-err","f-err"].forEach(function(e){$(e).textContent = ""});
+  if(t.fee > 0){
+    $("p-title").textContent = "Lipa ada: "+t.title;
+    $("p-sub").textContent = t.when+" · Timu "+t.slots;
+    $("p-num").textContent = PAY_NUMBER;
+    $("p-name").textContent = PAY_NAME;
+    $("p-amt").textContent = fmt(t.fee);
+    [].forEach.call(document.querySelectorAll(".n"), function(e){e.textContent = PAY_NUMBER});
+    [].forEach.call(document.querySelectorAll(".nm"), function(e){e.textContent = PAY_NAME});
+    $("c-sub").textContent = t.title+" · Ada "+fmt(t.fee);
+    step("s-pay");
+  } else {
+    $("f-title").textContent = t.title+" (bure)";
+    $("f-sub").textContent = t.when+" · Timu "+t.slots+" · Zawadi "+prizeLine(t);
+    step("s-free");
+  }
+  $("dlg").showModal();
+}
+
+function copyText(txt, btn){
+  var done = function(){btn.textContent = "Imenakiliwa ✓"; setTimeout(function(){btn.textContent = "Nakili namba"}, 2000)};
+  var fallback = function(){
+    var a = document.createElement("textarea"); a.value = txt; document.body.appendChild(a); a.select();
+    try{document.execCommand("copy"); done()}catch(e){} a.remove();
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+}
+function wa(msg){window.open("https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg), "_blank"); $("dlg").close()}
+
+function render(){
+  var open = TOURNAMENTS.map(function(t,i){t.i = i; return t}).filter(function(t){return t.filled < t.slots});
+  var n = open.sort(function(a,b){return b.filled/b.slots - a.filled/a.slots})[0] || TOURNAMENTS[0];
+  var isOpen = n.filled < n.slots, p = prizes(n);
+  $("next").className = "pitch th"+n.i;
+  $("next").innerHTML =
+    '<div class="head">'+trophy(n.i)+'<span class="pill">Timu '+n.slots+'</span></div><div class="in">'+
+    '<div class="when">'+n.title+' · '+n.when+'</div>'+
+    '<div class="prize">'+fmt(p[0])+'</div><div>'+(p[1] ? 'mshindi wa 1 · wa 2 anapata '+fmt(p[1]) : 'zawadi ya mshindi')+'</div>'+
+    '<div class="row"><span>Ada: '+feeText(n)+'</span><span>Timu: '+n.filled+'/'+n.slots+'</span></div>'+
+    '<div class="bar"><i style="width:'+Math.round(n.filled/n.slots*100)+'%"></i></div>'+
+    '<button id="hj">'+(isOpen?"Jiunge sasa":"Mashindano yamejaa")+'</button></div>';
+  if(isOpen) $("hj").onclick = function(){openJoin(n)}; else $("hj").disabled = true;
+
+  $("list").innerHTML = "";
+  TOURNAMENTS.forEach(function(t, i){
+    var left = t.slots-t.filled, full = left <= 0, d = document.createElement("div");
+    d.className = "card th"+i+(full?" full":"");
+    d.innerHTML = '<div class="head">'+trophy(i)+'<span class="pill">Timu '+t.slots+'</span></div><div class="in"><h3>'+t.title+'</h3>'+
+      '<p class="meta">'+t.when+'<br>'+t.format+'<br>Ada: '+feeText(t)+'<br>Zawadi: '+prizeLine(t)+'<br>'+
+      (full?"Imejaa":(left<=3?"Zimebaki nafasi "+left+" tu!":"Nafasi zilizobaki: "+left+" kati ya "+t.slots))+'</p>'+
+      '<button>'+(full?"Imejaa":"Jiunge")+'</button></div>';
+    var b = d.querySelector("button");
+    if(full) b.disabled = true; else b.onclick = function(){openJoin(t)};
+    $("list").appendChild(d);
+  });
+}
+
+[].forEach.call(document.querySelectorAll("[data-close]"), function(b){b.onclick = function(){$("dlg").close()}});
+$("copy").onclick = function(){copyText(PAY_NUMBER, this)};
+$("done").onclick = function(){step("s-confirm")};
+$("back").onclick = function(){step("s-pay")};
+
+$("c-send").onclick = function(){
+  var nm = $("c-name").value.trim(), ph = $("c-phone").value.trim(), net = $("c-net").value, sms = $("c-sms").value.trim();
+  if(!nm || !ph || !net || sms.length < 20){$("c-err").textContent = "Jaza sehemu zote na ubandike meseji kamili ya muamala."; return}
+  var low = sms.toLowerCase(), amtOk = sms.replace(/,/g,"").indexOf(String(cur.fee)) > -1, nameOk = low.indexOf("daria") > -1;
+  if((!amtOk || !nameOk) && !warned){
+    warned = true;
+    $("c-err").textContent = "Meseji haionyeshi "+(!amtOk ? "kiasi cha "+fmt(cur.fee) : "jina "+PAY_NAME)+". Hakikisha umebandika meseji sahihi. Ukiwa na uhakika, bonyeza tena Thibitisha malipo.";
+    return;
+  }
+  wa("MALIPO YA KOMBE\nKombe: "+cur.title+" (timu "+cur.slots+")\nAda: "+fmt(cur.fee)+"\nJina/ID ya eFootball: "+nm+
+     "\nNamba aliyotumia: "+ph+"\nMtandao: "+net+"\n\nMeseji ya muamala:\n"+sms);
+};
+$("f-send").onclick = function(){
+  var team = $("f-team").value.trim(), ph = $("f-phone").value.trim(), net = $("f-net").value, reg = $("f-reg").value.trim();
+  if(!team || !ph || !net || !reg){$("f-err").textContent = "Jaza sehemu zote."; return}
+  var pr = document.querySelector('input[name="prz"]:checked').value;
+  wa("USAJILI WA KOMBE LA BURE\nKombe: "+cur.title+" (timu "+cur.slots+")\nJina la timu: "+team+"\nNamba ya kupokea zawadi: "+ph+
+     "\nMtandao: "+net+"\nMajina ya usajili wa namba: "+reg+"\nAnataka zawadi kama: "+pr);
+};
+render();
+</script>
+</body>
+</html>
