@@ -110,11 +110,25 @@ dialog.chat[open]{display:flex;flex-direction:column}
 .cnote{padding:0 14px 10px;font-size:12px;color:var(--mute);margin:0}
 .cerr{color:#c0392b;font-size:14px;padding:0 14px;min-height:18px}
 footer{color:var(--mute);font-size:13px;margin-top:32px}
+.top .tr{margin-left:auto;display:flex;gap:8px}
+.top .tr button{min-height:40px;padding:8px 14px;font-size:14px}
+.imgbox{position:relative;height:160px;background:#000}
+.imgbox img{width:100%;height:100%;object-fit:cover;display:block}
+.imgbox .pill{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);color:#fff}
+.nimg{width:100%;max-height:260px;object-fit:cover;display:block}
+.wimg{width:100%;height:220px;object-fit:cover;display:block}
+.aimg{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:6px}
+.nbody{white-space:pre-wrap;word-break:break-word}
+dialog#auth{width:min(420px,94vw)}
+input[type=file]{padding:10px}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <div class="top"><img id="logo" src="logo.jpg" alt="" onerror="this.remove()"><b id="brand">Ligi ya eFootball</b><button class="gold" id="ch-open2" style="margin-left:auto;min-height:40px;padding:8px 16px;font-size:15px">Gumzo</button></div>
+  <div class="top"><img id="logo" src="logo.jpg" alt="" onerror="this.remove()"><b id="brand">Ligi ya eFootball</b>
+    <span class="tr"><button class="gold" id="ch-open2">Gumzo</button><button class="ghost" id="logout" hidden>Toka</button></span></div>
+  <div id="who" class="meta" hidden style="margin:2px 0 0"></div>
+
   <header class="hero">
     <h1>Cheza. Shinda. Pata zawadi.</h1>
     <p>Kila kombe lina timu 8. Jisajili, lipa ada, pata code ya room na ucheze.</p>
@@ -128,8 +142,18 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
 
   <section class="pitch" id="next" aria-live="polite" hidden></section>
 
+  <div id="news-sec" hidden><h2>Habari mpya</h2><div id="news"></div></div>
+
   <h2>Mashindano yote</h2>
   <div class="grid" id="list"><p class="meta">Inapakia mashindano...</p></div>
+
+  <div id="win-sec" hidden><h2>Washindi wetu</h2><div class="grid" id="winners"></div></div>
+
+  <div id="my-sec" hidden>
+    <h2>Maombi yangu</h2>
+    <div id="my-list"></div>
+    <button class="ghost" id="my-ref" style="width:100%;margin-top:6px">Onyesha upya</button>
+  </div>
 
   <h2>Wadhamini</h2>
   <div class="grid" id="sponsors"></div>
@@ -140,25 +164,33 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
     <button class="gold" id="ch-open" style="width:100%">Fungua gumzo</button>
   </div></div>
 
-  <h2>Angalia ombi langu</h2>
-  <div class="card"><div class="in">
-    <p class="meta">Ukishajisajili, weka namba yako ya simu na namba ya ombi (ticket) uliyopewa ili kuona kama imethibitishwa na kupata code ya room.</p>
-    <label for="l-phone">Namba ya simu uliyotumia kujisajili</label><input id="l-phone" inputmode="tel" autocomplete="tel">
-    <label for="l-ticket">Namba ya ombi (ticket)</label><input id="l-ticket" autocapitalize="characters" autocomplete="off">
-    <button class="gold" id="l-btn" style="width:100%;margin-top:14px">Angalia</button>
-    <div id="l-out" role="status" style="margin-top:12px"></div>
-  </div></div>
-
   <h2>Jinsi inavyofanya kazi</h2>
   <ol>
-    <li>Chagua kombe na bonyeza Jiunge.</li>
-    <li>Lipa ada kwa maelekezo yatakayoonekana, kisha bonyeza Nimekamilisha.</li>
-    <li>Bandika meseji ya muamala na utume ombi. Utapewa namba ya ombi (ticket).</li>
-    <li>Admin akithibitisha malipo, code ya room inaonekana kwenye "Angalia ombi langu".</li>
+    <li>Jisajili kwa namba yako ya simu na nenosiri, kisha ingia.</li>
+    <li>Chagua kombe na bonyeza Jiunge. Lipa ada kwa maelekezo yatakayoonekana.</li>
+    <li>Bandika meseji ya muamala na utume ombi. Utapewa namba ya ombi.</li>
+    <li>Admin akithibitisha malipo, code ya room inaonekana kwenye "Maombi yangu".</li>
     <li>Mshindi analipwa zawadi mara tu baada ya fainali.</li>
   </ol>
   <footer>Kwa watu wa miaka 18 na zaidi. Cheza kwa kuwajibika.</footer>
 </main>
+
+<dialog id="auth">
+  <h2 id="au-title">Karibu Ligi ya eFootball</h2>
+  <div class="tabs" style="margin-top:10px">
+    <button class="gold" id="au-tab-in">Ingia</button>
+    <button class="ghost" id="au-tab-up">Jisajili</button>
+  </div>
+  <div id="au-name-box" hidden><label for="au-name">Jina lako</label><input id="au-name" maxlength="30" autocomplete="name"></div>
+  <label for="au-phone">Namba ya simu</label><input id="au-phone" inputmode="tel" autocomplete="username" placeholder="07XXXXXXXX">
+  <label for="au-pass">Nenosiri (angalau herufi 6)</label><input id="au-pass" type="password" autocomplete="current-password">
+  <div class="err" id="au-err" role="alert"></div>
+  <div class="actions">
+    <button class="ghost" id="au-close" hidden>Funga</button>
+    <button class="gold" id="au-go" style="flex:1">Ingia</button>
+  </div>
+  <p class="note">Namba yako ya simu ndiyo jina lako la kuingia. Hifadhi nenosiri lako vizuri. Ukilisahau, wasiliana na admin.</p>
+</dialog>
 
 <dialog id="dlg">
   <div id="s-pay">
@@ -205,7 +237,7 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
       <button class="ghost" id="back">Rudi</button>
       <button id="c-send" class="gold" style="flex:1">Thibitisha malipo</button>
     </div>
-    <p class="note">Ombi lako linakwenda moja kwa moja kwa admin. Utapewa namba ya ombi, itumie kuangalia code ya room.</p>
+    <p class="note">Ombi lako linakwenda moja kwa moja kwa admin. Utaliona kwenye "Maombi yangu".</p>
   </div>
 
   <div id="s-free" hidden>
@@ -230,7 +262,7 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
 
   <div id="s-done" hidden>
     <h2>Ombi limetumwa ✓</h2>
-    <p class="meta">Admin ameona ombi lako. Hifadhi namba hii, kisha rudi kwenye "Angalia ombi langu" baadaye kuona kama imethibitishwa na kupata code ya room. Unaweza pia kufunga ukurasa na kurudi baadaye.</p>
+    <p class="meta">Admin ameona ombi lako. Litaonekana kwenye "Maombi yangu" hapa chini ya ukurasa. Admin akithibitisha malipo, code ya room itaonekana hapo.</p>
     <div class="big" id="d-ticket"></div>
     <button class="ghost" id="d-copy" style="width:100%">Nakili namba ya ombi</button>
     <button class="ghost" data-close style="width:100%;margin-top:10px">Funga</button>
@@ -239,18 +271,10 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
 
 <dialog id="chat" class="chat">
   <div class="chead"><b>Gumzo la wachezaji</b><button class="ghost" id="ch-x">Funga</button></div>
-  <div id="ch-namebox" hidden style="padding:16px">
-    <label for="ch-name" style="margin-top:0">Jina lako la kuonyesha kwenye gumzo</label>
-    <input id="ch-name" maxlength="24" autocomplete="nickname" placeholder="Mfano: Juma FC">
-    <div class="cerr" id="ch-nerr" style="padding:0"></div>
-    <button class="gold" id="ch-nok" style="width:100%;margin-top:12px">Endelea</button>
-  </div>
-  <div id="ch-main" style="display:flex;flex-direction:column;flex:1;min-height:0">
-    <div class="msgs" id="ch-list" aria-live="polite"></div>
-    <div class="cerr" id="ch-err" role="alert"></div>
-    <div class="csend"><input id="ch-input" maxlength="300" placeholder="Andika ujumbe..." autocomplete="off"><button class="gold" id="ch-send">Tuma</button></div>
-    <p class="cnote">Links na namba za simu haziruhusiwi. Tumia heshima. Admin anaweza kufuta ujumbe.</p>
-  </div>
+  <div class="msgs" id="ch-list" aria-live="polite"></div>
+  <div class="cerr" id="ch-err" role="alert"></div>
+  <div class="csend"><input id="ch-input" maxlength="300" placeholder="Andika ujumbe..." autocomplete="off"><button class="gold" id="ch-send">Tuma</button></div>
+  <p class="cnote">Links na namba za simu haziruhusiwi. Tumia heshima. Admin anaweza kufuta ujumbe.</p>
 </dialog>
 
 <dialog id="adm">
@@ -269,10 +293,14 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
     <div class="tabs">
       <button class="gold" id="tab-r">Maombi</button>
       <button class="ghost" id="tab-p">Washiriki</button>
+      <button class="ghost" id="tab-u">Wachezaji</button>
+      <button class="ghost" id="tab-n">Habari</button>
+      <button class="ghost" id="tab-w">Washindi</button>
       <button class="ghost" id="tab-t">Mashindano</button>
       <button class="ghost" id="a-out">Toka</button>
       <button class="ghost" data-aclose>Funga</button>
     </div>
+
     <div id="v-r">
       <div class="tabs">
         <button class="gold" id="f-pend">Yanayosubiri</button>
@@ -281,6 +309,7 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
       </div>
       <div id="a-reqs"></div>
     </div>
+
     <div id="v-p" hidden>
       <label for="p-t" style="margin-top:0">Kombe</label><select id="p-t"></select>
       <div class="two">
@@ -298,9 +327,50 @@ footer{color:var(--mute);font-size:13px;margin-top:32px}
       <div id="p-list"></div>
     </div>
 
+    <div id="v-u" hidden>
+      <label for="u-q" style="margin-top:0">Tafuta mchezaji (jina au simu)</label><input id="u-q" autocomplete="off">
+      <div id="u-sum" class="meta" style="margin-top:12px"></div>
+      <div class="actions" style="margin-top:0;margin-bottom:12px"><button class="ghost" id="u-copy" style="flex:1">Nakili orodha</button></div>
+      <div id="u-list"></div>
+    </div>
+
+    <div id="v-n" hidden>
+      <div class="req">
+        <b>Weka habari mpya</b>
+        <label for="n-title">Kichwa cha habari</label><input id="n-title" maxlength="120">
+        <label for="n-body">Maelezo</label><textarea id="n-body" maxlength="2000"></textarea>
+        <label for="n-img">Picha (hiari)</label><input id="n-img" type="file" accept="image/*">
+        <div class="err" id="n-err" role="alert"></div>
+        <button class="gold" id="n-add" style="width:100%;margin-top:10px">Weka habari</button>
+      </div>
+      <div id="n-list"></div>
+    </div>
+
+    <div id="v-w" hidden>
+      <div class="req">
+        <b>Weka mshindi</b>
+        <label for="w-t">Kombe</label><input id="w-t" list="w-tl" maxlength="80"><datalist id="w-tl"></datalist>
+        <label for="w-n">Jina la mshindi</label><input id="w-n" maxlength="60">
+        <label for="w-p">Zawadi aliyopata (mfano: TSh 6,700)</label><input id="w-p" maxlength="60">
+        <label for="w-img">Picha ya mshindi</label><input id="w-img" type="file" accept="image/*">
+        <div class="err" id="w-err" role="alert"></div>
+        <button class="gold" id="w-add" style="width:100%;margin-top:10px">Weka mshindi</button>
+      </div>
+      <div id="w-list"></div>
+    </div>
+
     <div id="v-t" hidden>
+      <div class="req">
+        <b>Ongeza kombe jipya</b>
+        <label for="nt-title">Jina la kombe</label><input id="nt-title" maxlength="80">
+        <label for="nt-when">Siku na saa</label><input id="nt-when" maxlength="80" placeholder="Mfano: Kila Jumamosi, saa 2:00 usiku">
+        <div class="two"><div><label for="nt-fee">Ada (0 = bure)</label><input id="nt-fee" type="number" inputmode="numeric" value="1000"></div>
+        <div><label for="nt-slots">Idadi ya timu</label><input id="nt-slots" type="number" inputmode="numeric" value="8"></div></div>
+        <label for="nt-img">Picha ya kombe</label><input id="nt-img" type="file" accept="image/*">
+        <div class="err" id="nt-err" role="alert"></div>
+        <button class="gold" id="nt-add" style="width:100%;margin-top:10px">Weka kombe</button>
+      </div>
       <div id="a-tours"></div>
-      <button class="gold" id="t-new" style="width:100%">Ongeza kombe jipya</button>
     </div>
   </div>
 </dialog>
@@ -313,11 +383,13 @@ var WHATSAPP = "255705974602";
 var PAY_NUMBER = "0705974602";
 var PAY_NAME = "DARIA SATORIA";
 var CUR = "TSh";
-var APK_URL = "";  /* ukishakuwa na faili la APK, lipakie GitHub na uandike jina lake hapa, mfano "ligi.apk" */
-/* Wadhamini (matangazo). Mfano: {name:"Duka la Simu ABC", text:"Punguzo kwa wachezaji wote", link:"https://wa.me/255700000000"} */
-var SPONSORS = [];
-var PRIZE_PERCENT = 0.7;  /* 70% ya ada zote ni zawadi */
-var FIRST_SHARE = 0.6;    /* wa 1 anapata 60% ya zawadi, wa 2 anapata 40% */
+var PRIZE_PERCENT = 0.7;          /* 70% ya ada zote ni zawadi */
+var FIRST_SHARE = 0.6;            /* wa 1 anapata 60% ya zawadi, wa 2 anapata 40% */
+var REQUIRE_LOGIN_FIRST = true;   /* true = kila mtu ajisajili/aingie kwanza. false = wageni wanaweza kuangalia tu */
+var PHONE_DOMAIN = "ligi-players.com";
+var BUCKET = "ligi-media";
+var APK_URL = "";                 /* mfano "ligi.apk" ukishapakia APK */
+var SPONSORS = [];                /* mfano: {name:"Duka ABC", text:"Punguzo kwa wachezaji", link:"https://wa.me/255700000000"} */
 /* ======================================= */
 
 var sb = (window.supabase && SUPABASE_URL.indexOf("PASTE") < 0) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
@@ -333,79 +405,12 @@ function trophy(i){return '<svg viewBox="0 0 100 92" width="64" height="60" fill
 var $ = function(id){return document.getElementById(id)};
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function cleanPhone(p){return String(p||"").replace(/[^0-9+]/g,"")}
-function intl(p){var d = cleanPhone(p).replace(/\+/g,""); if(d.charAt(0)==="0") d = "255"+d.slice(1); return d}
+function phoneKey(p){var d = String(p||"").replace(/[^0-9]/g,""); if(d.charAt(0) === "0") d = "255"+d.slice(1); return d}
+function localPhone(p){var d = String(p||""); return d.indexOf("255") === 0 ? "0"+d.slice(3) : d}
 var fmt = function(n){return CUR+" "+Number(n).toLocaleString("en-US")};
 var feeText = function(t){return t.fee ? fmt(t.fee) : "Bure"};
-var TOURNAMENTS = [], cur = null, warned = false;
-
-function prizes(t){
-  if(t.prize1 != null) return [t.prize1, t.prize2 || 0];
-  var pool = t.fee*t.slots*PRIZE_PERCENT, p1 = Math.round(pool*FIRST_SHARE/100)*100;
-  return [p1, Math.round(pool)-p1];
-}
-function prizeLine(t){var q = prizes(t); return q[1] ? "wa 1 "+fmt(q[0])+" · wa 2 "+fmt(q[1]) : "mshindi "+fmt(q[0])}
-
-async function loadTournaments(){
-  if(!sb){$("list").innerHTML = '<p class="meta">Website bado haijaunganishwa na database.</p>'; return}
-  var r = await sb.from("tournaments").select("*").eq("active", true).order("sort").order("id");
-  if(r.error){$("list").innerHTML = '<p class="meta">Imeshindwa kupakia mashindano. Jaribu tena baadaye.</p>'; return}
-  TOURNAMENTS = r.data.map(function(t){return {id:t.id, title:t.title, when:t.when_text, fee:t.fee, slots:t.slots, filled:t.filled, theme:t.theme%4, format:t.format||"", prize1:t.prize1, prize2:t.prize2}});
-  render();
-}
-
-function render(){
-  var open = TOURNAMENTS.filter(function(t){return t.filled < t.slots});
-  var n = open.sort(function(a,b){return b.filled/b.slots - a.filled/a.slots})[0] || TOURNAMENTS[0];
-  var hero = $("next");
-  if(!n){hero.hidden = true; $("list").innerHTML = '<p class="meta">Hakuna mashindano kwa sasa. Rudi baadaye.</p>'; return}
-  hero.hidden = false;
-  var isOpen = n.filled < n.slots, p = prizes(n);
-  hero.className = "pitch th"+n.theme;
-  hero.innerHTML =
-    '<div class="head">'+trophy(n.theme)+'<span class="pill">Timu '+n.slots+'</span></div><div class="in">'+
-    '<div class="when">'+esc(n.title)+' · '+esc(n.when)+'</div>'+
-    '<div class="prize">'+fmt(p[0])+'</div><div>'+(p[1] ? 'mshindi wa 1 · wa 2 anapata '+fmt(p[1]) : 'zawadi ya mshindi')+'</div>'+
-    '<div class="row"><span>Ada: '+feeText(n)+'</span><span>Timu: '+n.filled+'/'+n.slots+'</span></div>'+
-    '<div class="bar"><i style="width:'+Math.round(n.filled/n.slots*100)+'%"></i></div>'+
-    '<button id="hj" class="gold">'+(isOpen?"Jiunge sasa":"Mashindano yamejaa")+'</button></div>';
-  if(isOpen) $("hj").onclick = function(){openJoin(n)}; else $("hj").disabled = true;
-
-  $("list").innerHTML = "";
-  TOURNAMENTS.forEach(function(t){
-    var left = t.slots-t.filled, full = left <= 0, d = document.createElement("div");
-    d.className = "card th"+t.theme+(full?" full":"");
-    d.innerHTML = '<div class="head">'+trophy(t.theme)+'<span class="pill">Timu '+t.slots+'</span></div><div class="in"><h3>'+esc(t.title)+'</h3>'+
-      '<p class="meta">'+esc(t.when)+'<br>'+esc(t.format)+'<br>Ada: '+feeText(t)+'<br>Zawadi: '+prizeLine(t)+'<br>'+
-      (full?"Imejaa":(left<=3?"Zimebaki nafasi "+left+" tu!":"Nafasi zilizobaki: "+left+" kati ya "+t.slots))+'</p>'+
-      '<button>'+(full?"Imejaa":"Jiunge")+'</button></div>';
-    var b = d.querySelector("button");
-    if(full) b.disabled = true; else b.onclick = function(){openJoin(t)};
-    $("list").appendChild(d);
-  });
-}
-
-/* ---------- Kujiunga ---------- */
-function step(id){["s-pay","s-confirm","s-free","s-done"].forEach(function(s){$(s).hidden = (s !== id)})}
-function openJoin(t){
-  cur = t; warned = false;
-  ["c-err","f-err"].forEach(function(e){$(e).textContent = ""});
-  if(t.fee > 0){
-    $("p-title").textContent = "Lipa ada: "+t.title;
-    $("p-sub").textContent = t.when+" · Timu "+t.slots;
-    $("p-num").textContent = PAY_NUMBER;
-    $("p-name").textContent = PAY_NAME;
-    $("p-amt").textContent = fmt(t.fee);
-    [].forEach.call(document.querySelectorAll(".n"), function(e){e.textContent = PAY_NUMBER});
-    [].forEach.call(document.querySelectorAll(".nm"), function(e){e.textContent = PAY_NAME});
-    $("c-sub").textContent = t.title+" · Ada "+fmt(t.fee);
-    step("s-pay");
-  } else {
-    $("f-title").textContent = t.title+" (bure)";
-    $("f-sub").textContent = t.when+" · Timu "+t.slots+" · Zawadi "+prizeLine(t);
-    step("s-free");
-  }
-  $("dlg").showModal();
-}
+function openD(d){if(!d.open) d.showModal()}
+function showErr(id, e){$(id).textContent = (e && e.message) ? e.message : String(e)}
 function copyText(txt, btn, label){
   var done = function(){btn.textContent = "Imenakiliwa ✓"; setTimeout(function(){btn.textContent = label}, 2000)};
   var fallback = function(){
@@ -414,25 +419,238 @@ function copyText(txt, btn, label){
   };
   if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
 }
+
+var TOURNAMENTS = [], cur = null, warned = false;
+var ME = null, IS_ADMIN = false, PROFILE = null, GATE = false;
+
+function prizes(t){
+  if(t.prize1 != null) return [t.prize1, t.prize2 || 0];
+  var pool = t.fee*t.slots*PRIZE_PERCENT, p1 = Math.round(pool*FIRST_SHARE/100)*100;
+  return [p1, Math.round(pool)-p1];
+}
+function prizeLine(t){var q = prizes(t); return q[1] ? "wa 1 "+fmt(q[0])+" · wa 2 "+fmt(q[1]) : "mshindi "+fmt(q[0])}
+
+/* ---------- Picha: kupunguza ukubwa na kupakia ---------- */
+function compress(file, maxW){
+  return new Promise(function(res, rej){
+    var img = new Image(), url = URL.createObjectURL(file);
+    img.onload = function(){
+      var s = Math.min(1, maxW/img.width), c = document.createElement("canvas");
+      c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){b ? res(b) : rej(new Error("Imeshindwa kuandaa picha"))}, "image/jpeg", 0.82);
+    };
+    img.onerror = function(){rej(new Error("Faili hili si picha sahihi"))};
+    img.src = url;
+  });
+}
+async function uploadImage(file, folder){
+  var blob = await compress(file, 1000);
+  var path = folder+"/"+Date.now()+"-"+Math.random().toString(36).slice(2, 8)+".jpg";
+  var r = await sb.storage.from(BUCKET).upload(path, blob, {contentType:"image/jpeg"});
+  if(r.error) throw r.error;
+  return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+/* ---------- Akaunti (namba ya simu + nenosiri) ---------- */
+var auMode = "in";
+function auSet(mode){
+  auMode = mode;
+  $("au-name-box").hidden = (mode !== "up");
+  $("au-tab-in").className = mode === "in" ? "gold" : "ghost";
+  $("au-tab-up").className = mode === "up" ? "gold" : "ghost";
+  $("au-go").textContent = mode === "in" ? "Ingia" : "Jisajili";
+  $("au-pass").autocomplete = mode === "in" ? "current-password" : "new-password";
+  $("au-err").textContent = "";
+}
+function openAuth(gate){
+  GATE = !!gate; $("au-close").hidden = GATE;
+  if(!$("auth").open){auSet("in"); $("auth").showModal()}
+}
+$("au-tab-in").onclick = function(){auSet("in")};
+$("au-tab-up").onclick = function(){auSet("up")};
+$("au-close").onclick = function(){$("auth").close()};
+$("auth").addEventListener("cancel", function(e){if(GATE) e.preventDefault()});
+$("au-go").onclick = async function(){
+  if(!sb){showErr("au-err", "Website haijaunganishwa na database."); return}
+  var name = $("au-name").value.trim(), ph = $("au-phone").value, pass = $("au-pass").value, b = this;
+  var key = phoneKey(ph);
+  if(key.length < 9 || key.length > 15){showErr("au-err", "Weka namba sahihi ya simu."); return}
+  if(pass.length < 6){showErr("au-err", "Nenosiri liwe angalau herufi 6."); return}
+  if(auMode === "up" && (name.length < 2 || /admin/i.test(name))){showErr("au-err", "Weka jina lako (herufi 2 au zaidi, bila neno admin)."); return}
+  var email = key+"@"+PHONE_DOMAIN;
+  b.disabled = true; $("au-err").textContent = "";
+  try{
+    if(auMode === "up"){
+      var r = await sb.auth.signUp({email:email, password:pass, options:{data:{name:name}}});
+      if(r.error){
+        if(/registered|exists/i.test(r.error.message)) throw new Error("Namba hii tayari imesajiliwa. Bonyeza Ingia.");
+        throw r.error;
+      }
+      if(!r.data.session){
+        var l = await sb.auth.signInWithPassword({email:email, password:pass});
+        if(l.error) throw new Error("Akaunti imetengenezwa lakini haijawashwa. Admin azime chaguo la Confirm email kwenye Supabase.");
+      }
+    } else {
+      var r2 = await sb.auth.signInWithPassword({email:email, password:pass});
+      if(r2.error) throw new Error("Namba au nenosiri si sahihi.");
+    }
+    $("au-pass").value = "";
+  }catch(e){showErr("au-err", e)}
+  b.disabled = false;
+};
+async function applySession(session){
+  ME = session ? session.user : null; IS_ADMIN = false; PROFILE = null;
+  if(ME){
+    var a = await sb.rpc("is_admin"); IS_ADMIN = (a.data === true);
+    if(!IS_ADMIN){
+      var p = await sb.from("profiles").select("name,phone").eq("user_id", ME.id).maybeSingle();
+      PROFILE = p.data || null;
+    }
+  }
+  updateUI();
+}
+function updateUI(){
+  $("logout").hidden = !ME;
+  var w = $("who");
+  if(ME){w.hidden = false; w.textContent = IS_ADMIN ? "Umeingia kama Admin" : "Umeingia: "+(PROFILE ? PROFILE.name+" · "+localPhone(PROFILE.phone) : "")}
+  else w.hidden = true;
+  if(!ME && REQUIRE_LOGIN_FIRST) openAuth(true);
+  else if(ME && $("auth").open){GATE = false; $("auth").close()}
+  loadMine();
+}
+$("logout").onclick = async function(){await sb.auth.signOut()};
+async function initAuth(){
+  if(!sb){return}
+  var s = await sb.auth.getSession();
+  await applySession(s.data.session);
+  sb.auth.onAuthStateChange(function(ev, session){
+    if(ev === "SIGNED_IN" || ev === "SIGNED_OUT" || ev === "USER_UPDATED") setTimeout(function(){applySession(session)}, 0);
+  });
+}
+
+/* ---------- Maudhui ya umma ---------- */
+function headHtml(t){
+  if(t.image_url) return '<div class="imgbox"><img src="'+esc(t.image_url)+'" alt="" loading="lazy"><span class="pill">Timu '+t.slots+'</span></div>';
+  return '<div class="head">'+trophy(t.theme)+'<span class="pill">Timu '+t.slots+'</span></div>';
+}
+async function loadTournaments(){
+  if(!sb){$("list").innerHTML = '<p class="meta">Website bado haijaunganishwa na database.</p>'; return}
+  var r = await sb.from("tournaments").select("*").eq("active", true).order("sort").order("id");
+  if(r.error){$("list").innerHTML = '<p class="meta">Imeshindwa kupakia mashindano. Jaribu tena baadaye.</p>'; return}
+  TOURNAMENTS = r.data.map(function(t){return {id:t.id, title:t.title, when:t.when_text, fee:t.fee, slots:t.slots, filled:t.filled, theme:t.theme%4, format:t.format||"", prize1:t.prize1, prize2:t.prize2, image_url:t.image_url}});
+  render();
+}
+function render(){
+  var open = TOURNAMENTS.filter(function(t){return t.filled < t.slots});
+  var n = open.sort(function(a,b){return b.filled/b.slots - a.filled/a.slots})[0] || TOURNAMENTS[0];
+  var hero = $("next");
+  if(!n){hero.hidden = true; $("list").innerHTML = '<p class="meta">Hakuna mashindano kwa sasa. Rudi baadaye.</p>'; return}
+  hero.hidden = false;
+  var isOpen = n.filled < n.slots, p = prizes(n);
+  hero.className = "pitch th"+n.theme;
+  hero.innerHTML = headHtml(n)+'<div class="in">'+
+    '<div class="when">'+esc(n.title)+' · '+esc(n.when)+'</div>'+
+    '<div class="prize">'+fmt(p[0])+'</div><div>'+(p[1] ? 'mshindi wa 1 · wa 2 anapata '+fmt(p[1]) : 'zawadi ya mshindi')+'</div>'+
+    '<div class="row"><span>Ada: '+feeText(n)+'</span><span>Timu: '+n.filled+'/'+n.slots+'</span></div>'+
+    '<div class="bar"><i style="width:'+Math.round(n.filled/n.slots*100)+'%"></i></div>'+
+    '<button id="hj" class="gold">'+(isOpen?"Jiunge sasa":"Mashindano yamejaa")+'</button></div>';
+  if(isOpen) $("hj").onclick = function(){openJoin(n)}; else $("hj").disabled = true;
+  $("list").innerHTML = "";
+  TOURNAMENTS.forEach(function(t){
+    var left = t.slots-t.filled, full = left <= 0, d = document.createElement("div");
+    d.className = "card th"+t.theme+(full?" full":"");
+    d.innerHTML = headHtml(t)+'<div class="in"><h3>'+esc(t.title)+'</h3>'+
+      '<p class="meta">'+esc(t.when)+'<br>'+esc(t.format)+'<br>Ada: '+feeText(t)+'<br>Zawadi: '+prizeLine(t)+'<br>'+
+      (full?"Imejaa":(left<=3?"Zimebaki nafasi "+left+" tu!":"Nafasi zilizobaki: "+left+" kati ya "+t.slots))+'</p>'+
+      '<button>'+(full?"Imejaa":"Jiunge")+'</button></div>';
+    var b = d.querySelector("button");
+    if(full) b.disabled = true; else b.onclick = function(){openJoin(t)};
+    $("list").appendChild(d);
+  });
+}
+async function loadNews(){
+  if(!sb) return;
+  var r = await sb.from("news").select("*").order("created_at", {ascending:false}).limit(10);
+  if(r.error || !r.data.length){$("news-sec").hidden = true; return}
+  $("news-sec").hidden = false;
+  $("news").innerHTML = r.data.map(function(n){
+    return '<div class="card" style="margin-bottom:12px">'+(n.image_url ? '<img class="nimg" src="'+esc(n.image_url)+'" alt="" loading="lazy">' : '')+
+      '<div class="in"><h3>'+esc(n.title)+'</h3><p class="meta" style="margin:0 0 8px">'+esc(new Date(n.created_at).toLocaleDateString())+'</p><div class="nbody">'+esc(n.body)+'</div></div></div>';
+  }).join("");
+}
+async function loadWinners(){
+  if(!sb) return;
+  var r = await sb.from("winners").select("*").order("created_at", {ascending:false}).limit(12);
+  if(r.error || !r.data.length){$("win-sec").hidden = true; return}
+  $("win-sec").hidden = false;
+  $("winners").innerHTML = r.data.map(function(w){
+    return '<div class="card"><img class="wimg" src="'+esc(w.image_url)+'" alt="" loading="lazy"><div class="in"><b>'+esc(w.winner_name)+'</b><div class="meta" style="margin:2px 0 0">'+esc(w.tournament_title)+(w.prize_text ? ' · '+esc(w.prize_text) : '')+'</div></div></div>';
+  }).join("");
+}
+async function loadMine(){
+  var sec = $("my-sec");
+  if(!sb || !ME || IS_ADMIN){sec.hidden = true; return}
+  var r = await sb.from("registrations").select("id,created_at,ticket,status,room_code,tournaments(title,when_text)").eq("user_id", ME.id).order("created_at", {ascending:false}).limit(20);
+  if(r.error){sec.hidden = true; return}
+  sec.hidden = false;
+  if(!r.data.length){$("my-list").innerHTML = '<p class="meta">Bado hujajiunga na kombe lolote.</p>'; return}
+  $("my-list").innerHTML = r.data.map(function(x){
+    var t = x.tournaments || {}, st = {pending:"Inasubiri", confirmed:"Imethibitishwa", rejected:"Imekataliwa"}[x.status];
+    var h = '<div class="req"><div class="rh"><b>'+esc(t.title)+'</b><span class="badge '+esc(x.status)+'">'+st+'</span></div>'+
+      '<div class="meta" style="margin:2px 0 0">'+esc(t.when_text)+' · Ombi: '+esc(x.ticket)+'</div>';
+    if(x.status === "confirmed" && x.room_code) h += '<div class="meta" style="margin:8px 0 0">Code ya room:</div><div class="big">'+esc(x.room_code)+'</div><button class="ghost" data-cp="'+esc(x.room_code)+'" style="width:100%">Nakili code</button>';
+    else if(x.status === "confirmed") h += '<div class="meta" style="margin:8px 0 0">Imethibitishwa. Code ya room itaonekana hapa hivi karibuni.</div>';
+    else if(x.status === "rejected") h += '<div class="meta" style="margin:8px 0 0">Ombi halikukubaliwa. Wasiliana na admin.</div>';
+    else h += '<div class="meta" style="margin:8px 0 0">Admin bado anahakiki malipo yako. Angalia tena baadaye.</div>';
+    return h+'</div>';
+  }).join("");
+}
+$("my-ref").onclick = loadMine;
+$("my-list").onclick = function(e){var c = e.target.closest("[data-cp]"); if(c) copyText(c.dataset.cp, c, "Nakili code")};
+setInterval(function(){if(ME && !IS_ADMIN && !document.hidden) loadMine()}, 20000);
+
+/* ---------- Kujiunga ---------- */
+function step(id){["s-pay","s-confirm","s-free","s-done"].forEach(function(s){$(s).hidden = (s !== id)})}
+function openJoin(t){
+  if(!ME){openAuth(false); return}
+  cur = t; warned = false;
+  ["c-err","f-err"].forEach(function(e){$(e).textContent = ""});
+  var nm = PROFILE ? PROFILE.name : "", ph = PROFILE ? localPhone(PROFILE.phone) : "";
+  if(t.fee > 0){
+    $("p-title").textContent = "Lipa ada: "+t.title;
+    $("p-sub").textContent = t.when+" · Timu "+t.slots;
+    $("p-num").textContent = PAY_NUMBER; $("p-name").textContent = PAY_NAME; $("p-amt").textContent = fmt(t.fee);
+    [].forEach.call(document.querySelectorAll(".n"), function(e){e.textContent = PAY_NUMBER});
+    [].forEach.call(document.querySelectorAll(".nm"), function(e){e.textContent = PAY_NAME});
+    $("c-sub").textContent = t.title+" · Ada "+fmt(t.fee);
+    if(!$("c-name").value) $("c-name").value = nm;
+    if(!$("c-phone").value) $("c-phone").value = ph;
+    step("s-pay");
+  } else {
+    $("f-title").textContent = t.title+" (bure)";
+    $("f-sub").textContent = t.when+" · Timu "+t.slots+" · Zawadi "+prizeLine(t);
+    if(!$("f-phone").value) $("f-phone").value = ph;
+    step("s-free");
+  }
+  openD($("dlg"));
+}
 async function submitReg(name, phone, net, sms, reg, pref){
   if(!sb) throw new Error("Website haijaunganishwa na database.");
   var r = await sb.rpc("submit_registration", {p_tournament:cur.id, p_name:name, p_phone:cleanPhone(phone), p_network:net||null, p_sms:sms||null, p_reg:reg||null, p_pref:pref||null});
   if(r.error) throw new Error(r.error.message);
   return r.data;
 }
-function showDone(ticket, name, phone){
-  try{localStorage.setItem("ligi_last", JSON.stringify({phone:cleanPhone(phone), ticket:ticket}))}catch(e){}
+function showDone(ticket){
   $("d-ticket").textContent = ticket;
   $("d-copy").onclick = function(){copyText(ticket, this, "Nakili namba ya ombi")};
-  $("l-phone").value = cleanPhone(phone); $("l-ticket").value = ticket;
-  step("s-done");
+  step("s-done"); loadMine(); loadTournaments();
 }
-
 [].forEach.call(document.querySelectorAll("[data-close]"), function(b){b.onclick = function(){$("dlg").close()}});
 $("copy").onclick = function(){copyText(PAY_NUMBER, this, "Nakili namba")};
 $("done").onclick = function(){step("s-confirm")};
 $("back").onclick = function(){step("s-pay")};
-
 $("c-send").onclick = async function(){
   var nm = $("c-name").value.trim(), ph = $("c-phone").value.trim(), net = $("c-net").value, sms = $("c-sms").value.trim();
   if(!nm || cleanPhone(ph).length < 9 || !net || sms.length < 20){$("c-err").textContent = "Jaza sehemu zote na ubandike meseji kamili ya muamala."; return}
@@ -443,7 +661,7 @@ $("c-send").onclick = async function(){
     return;
   }
   var b = this; b.disabled = true; b.textContent = "Inatuma...";
-  try{ var tk = await submitReg(nm, ph, net, sms, null, null); showDone(tk, nm, ph) }
+  try{ var tk = await submitReg(nm, ph, net, sms, null, null); $("c-sms").value = ""; showDone(tk) }
   catch(e){ $("c-err").textContent = e.message }
   b.disabled = false; b.textContent = "Thibitisha malipo";
 };
@@ -452,48 +670,71 @@ $("f-send").onclick = async function(){
   if(!team || cleanPhone(ph).length < 9 || !net || !reg){$("f-err").textContent = "Jaza sehemu zote."; return}
   var pr = document.querySelector('input[name="prz"]:checked').value;
   var b = this; b.disabled = true; b.textContent = "Inatuma...";
-  try{ var tk = await submitReg(team, ph, net, null, reg, pr); showDone(tk, team, ph) }
+  try{ var tk = await submitReg(team, ph, net, null, reg, pr); showDone(tk) }
   catch(e){ $("f-err").textContent = e.message }
   b.disabled = false; b.textContent = "Jisajili";
 };
 
-/* ---------- Angalia ombi langu ---------- */
-try{var last = JSON.parse(localStorage.getItem("ligi_last")||"null"); if(last){$("l-phone").value = last.phone; $("l-ticket").value = last.ticket}}catch(e){}
-$("l-btn").onclick = async function(){
-  var out = $("l-out"), ph = cleanPhone($("l-phone").value), tk = $("l-ticket").value.trim();
-  if(!sb){out.textContent = "Website haijaunganishwa na database."; return}
-  if(ph.length < 9 || tk.length < 4){out.textContent = "Weka namba ya simu na namba ya ombi."; return}
-  out.textContent = "Inaangalia...";
-  var r = await sb.rpc("check_request", {p_phone:ph, p_ticket:tk});
-  if(r.error || !r.data || !r.data.length){out.textContent = "Ombi halijapatikana. Hakikisha namba zote mbili ni sahihi."; return}
-  var d = r.data[0];
-  if(d.status === "confirmed"){
-    if(d.room_code){
-      out.innerHTML = '<b>Malipo yamethibitishwa ✓</b><div class="meta">'+esc(d.title)+' · '+esc(d.when_text)+'</div><div class="meta" style="margin:0">Code ya room:</div><div class="big">'+esc(d.room_code)+'</div><button class="ghost" id="l-copy" style="width:100%">Nakili code</button>';
-      $("l-copy").onclick = function(){copyText(d.room_code, this, "Nakili code")};
-    } else out.innerHTML = '<b>Malipo yamethibitishwa ✓</b><div class="meta">Code ya room itaonekana hapa hivi karibuni. Angalia tena baadaye.</div>';
-  } else if(d.status === "rejected"){
-    out.innerHTML = '<b>Ombi halikukubaliwa.</b><div class="meta">Wasiliana na admin kwa WhatsApp.</div>';
-  } else {
-    out.innerHTML = '<b>Linasubiri uthibitisho</b><div class="meta">Admin bado anahakiki malipo yako. Angalia tena baadaye.</div>';
+/* ---------- Gumzo (kwa waliojisajili) ---------- */
+var chTimer = null;
+async function chLoad(forceBottom){
+  if(!sb || !ME) return;
+  var r = await sb.from("chat_messages").select("id,created_at,user_id,name,body,is_admin").order("id", {ascending:false}).limit(100);
+  if(r.error){$("ch-err").textContent = "Imeshindwa kupakia gumzo. Admin anahitaji kuendesha SQL ya gumzo."; return}
+  var box = $("ch-list"), near = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+  var rows = r.data.slice().reverse();
+  box.innerHTML = rows.length ? rows.map(function(m){
+    var me = m.user_id === ME.id;
+    var t = new Date(m.created_at).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+    var mod = IS_ADMIN ? '<div class="mod"><button class="ghost" data-del="'+m.id+'">Futa</button>'+(!m.is_admin ? '<button class="ghost" data-ban="'+esc(m.user_id)+'">Zuia</button>' : '')+'</div>' : "";
+    return '<div class="m'+(me?" me":"")+(m.is_admin?" adm":"")+'"><b>'+esc(m.name)+(m.is_admin?" (Admin)":"")+'</b>'+esc(m.body)+'<i>'+t+'</i>'+mod+'</div>';
+  }).join("") : '<p class="meta">Hakuna ujumbe bado. Anza mazungumzo!</p>';
+  if(near || forceBottom) box.scrollTop = box.scrollHeight;
+}
+function chOpen(){
+  if(!sb){alert("Gumzo halijaunganishwa bado."); return}
+  if(!ME){openAuth(false); return}
+  $("ch-err").textContent = ""; openD($("chat"));
+  chLoad(true); clearInterval(chTimer); chTimer = setInterval(function(){chLoad(false)}, 4000);
+}
+$("ch-open").onclick = chOpen; $("ch-open2").onclick = chOpen;
+$("ch-x").onclick = function(){$("chat").close()};
+$("chat").addEventListener("close", function(){clearInterval(chTimer)});
+async function chSend(){
+  var t = $("ch-input").value.trim(); if(!t) return;
+  var b = $("ch-send"); b.disabled = true;
+  var r = await sb.rpc("send_chat", {p_body:t});
+  b.disabled = false;
+  if(r.error){$("ch-err").textContent = r.error.message; return}
+  $("ch-err").textContent = ""; $("ch-input").value = ""; chLoad(true);
+}
+$("ch-send").onclick = chSend;
+$("ch-input").addEventListener("keydown", function(e){if(e.key === "Enter"){e.preventDefault(); chSend()}});
+$("ch-list").onclick = async function(e){
+  var d = e.target.closest("[data-del]"), b = e.target.closest("[data-ban]");
+  if(d){
+    if(!confirm("Futa ujumbe huu?")) return;
+    var r = await sb.from("chat_messages").delete().eq("id", Number(d.dataset.del));
+    if(r.error) alert(r.error.message); else chLoad(false);
+  } else if(b){
+    if(!confirm("Mzuie mchezaji huyu asitume ujumbe?")) return;
+    var r2 = await sb.from("chat_banned").insert({user_id:b.dataset.ban});
+    if(r2.error) alert(r2.error.message); else alert("Mchezaji amezuiwa.");
   }
 };
 
 /* ---------- Admin (bonyeza jina mara 5) ---------- */
-var taps = 0, tapT = null, showAll = false;
-$("brand").onclick = function(){
+var taps = 0, tapT = null, showAll = false, poll = null;
+function tapAdmin(){
   taps++; clearTimeout(tapT); tapT = setTimeout(function(){taps = 0}, 1500);
   if(taps >= 5){taps = 0; openAdmin()}
-};
+}
+$("brand").onclick = tapAdmin; $("au-title").onclick = tapAdmin;
 [].forEach.call(document.querySelectorAll("[data-aclose]"), function(b){b.onclick = function(){$("adm").close()}});
 async function openAdmin(){
   if(!sb){alert("Database haijaunganishwa."); return}
-  $("a-err").textContent = ""; $("adm").showModal();
-  var s = await sb.auth.getSession();
-  if(s.data && s.data.session){
-    var ok = await sb.rpc("is_admin");
-    if(ok.data === true){showPanel(); return}
-  }
+  $("a-err").textContent = ""; openD($("adm"));
+  if(ME && IS_ADMIN){showPanel(); return}
   $("a-login").hidden = false; $("a-panel").hidden = true;
 }
 $("a-in").onclick = async function(){
@@ -501,32 +742,29 @@ $("a-in").onclick = async function(){
   if(r.error){$("a-err").textContent = "Email au nenosiri si sahihi."; return}
   var ok = await sb.rpc("is_admin");
   if(ok.data !== true){await sb.auth.signOut(); $("a-err").textContent = "Akaunti hii haina ruhusa ya admin."; return}
-  $("a-pass").value = ""; showPanel();
+  $("a-pass").value = ""; ME = r.data.user; IS_ADMIN = true; showPanel();
 };
-$("a-out").onclick = async function(){await sb.auth.signOut(); IS_ADMIN = false; $("adm").close()};
-var poll = null;
+$("a-out").onclick = async function(){await sb.auth.signOut(); $("adm").close()};
+var TABS = ["r","p","u","n","w","t"];
 function showPanel(){
-  IS_ADMIN = true;
   $("a-login").hidden = true; $("a-panel").hidden = false; tab("r");
   clearInterval(poll);
-  poll = setInterval(function(){ if($("adm").open && !$("v-r").hidden) loadReqs(true) }, 20000);
+  poll = setInterval(function(){if($("adm").open && !$("v-r").hidden) loadReqs(true)}, 20000);
 }
 $("adm").addEventListener("close", function(){clearInterval(poll)});
 function tab(w){
-  ["r","p","t"].forEach(function(k){
-    $("v-"+k).hidden = (w !== k);
-    $("tab-"+k).className = w === k ? "gold" : "ghost";
-  });
-  if(w === "r") loadReqs(); else if(w === "p") loadPart(); else loadTours();
+  TABS.forEach(function(k){$("v-"+k).hidden = (w !== k); $("tab-"+k).className = w === k ? "gold" : "ghost"});
+  ({r:loadReqs, p:loadPart, u:loadUsers, n:loadNewsAdmin, w:loadWinAdmin, t:loadTours})[w]();
 }
-$("tab-r").onclick = function(){tab("r")}; $("tab-p").onclick = function(){tab("p")}; $("tab-t").onclick = function(){tab("t")};
+TABS.forEach(function(k){$("tab-"+k).onclick = function(){tab(k)}});
 $("f-pend").onclick = function(){showAll = false; $("f-pend").className = "gold"; $("f-all").className = "ghost"; loadReqs()};
 $("f-all").onclick = function(){showAll = true; $("f-all").className = "gold"; $("f-pend").className = "ghost"; loadReqs()};
 $("f-ref").onclick = function(){loadReqs()};
 
+/* Maombi */
 async function loadReqs(silent){
   var box = $("a-reqs");
-  if(silent){ if([].some.call(box.querySelectorAll("input"), function(i){return i.value})) return }
+  if(silent){if([].some.call(box.querySelectorAll("input"), function(i){return i.value})) return}
   else box.innerHTML = '<p class="meta">Inapakia...</p>';
   var q = sb.from("registrations").select("*, tournaments(title)").order("created_at", {ascending:false}).limit(100);
   if(!showAll) q = q.eq("status", "pending");
@@ -543,8 +781,7 @@ function reqCard(x){
   if(x.kind === "free") h += `<div class="meta">Majina ya usajili: ${esc(x.reg_names)} · Zawadi kama: ${esc(x.prize_pref)}</div>`;
   if(x.sms) h += `<pre>${esc(x.sms)}</pre>`;
   if(x.status === "confirmed"){
-    h += `<div>Code: <b>${esc(x.room_code||"-")}</b></div>`;
-    h += `<div class="meta">Mchezaji ataona code hii kwenye "Angalia ombi langu".</div>`;
+    h += `<div>Code: <b>${esc(x.room_code||"-")}</b></div><div class="meta">Mchezaji ataona code hii kwenye "Maombi yangu".</div>`;
   } else {
     h += `<label for="code-${x.id}">Code ya room</label><input id="code-${x.id}" autocomplete="off">
       <div class="actions"><button class="gold" data-act="ok" data-id="${x.id}">Thibitisha</button>${x.status === "pending" ? `<button class="ghost" data-act="no" data-id="${x.id}">Kataa</button>` : ""}</div>`;
@@ -567,147 +804,12 @@ $("a-reqs").onclick = async function(e){
   loadReqs(); loadTournaments();
 };
 
-async function loadTours(){
-  var box = $("a-tours"); box.innerHTML = '<p class="meta">Inapakia...</p>';
-  var r = await sb.from("tournaments").select("*").order("sort").order("id");
-  if(r.error){box.textContent = "Hitilafu: "+r.error.message; return}
-  box.innerHTML = r.data.map(function(t){return `<div class="req" data-tid="${t.id}">
-    <label>Jina la kombe</label><input data-f="title" value="${esc(t.title)}">
-    <label>Siku na saa</label><input data-f="when_text" value="${esc(t.when_text)}">
-    <div class="two"><div><label>Ada (0 = bure)</label><input data-f="fee" type="number" inputmode="numeric" value="${t.fee}"></div>
-    <div><label>Idadi ya timu</label><input data-f="slots" type="number" inputmode="numeric" value="${t.slots}"></div></div>
-    <div class="two"><div><label>Waliojiunga (filled)</label><input data-f="filled" type="number" inputmode="numeric" value="${t.filled}"></div>
-    <div><label>Zawadi wa 1 (hiari)</label><input data-f="prize1" type="number" inputmode="numeric" value="${t.prize1 == null ? "" : t.prize1}"></div></div>
-    <div class="two"><div><label>Zawadi wa 2 (hiari)</label><input data-f="prize2" type="number" inputmode="numeric" value="${t.prize2 == null ? "" : t.prize2}"></div>
-    <div><label>Linaonekana?</label><input data-f="active" type="checkbox" ${t.active ? "checked" : ""}></div></div>
-    <p class="note">Acha zawadi tupu kwa kombe la ada, zinahesabiwa zenyewe. Kwa kombe la bure weka zawadi wa 1 (na wa 2 = 0 kama yupo mmoja tu).</p>
-    <div class="actions"><button class="gold" data-act="save" data-id="${t.id}">Hifadhi</button></div></div>`}).join("");
-}
-$("a-tours").onclick = async function(e){
-  var b = e.target.closest("button[data-act=save]"); if(!b) return;
-  var box = b.closest("[data-tid]"), g = function(f){return box.querySelector('[data-f="'+f+'"]')};
-  var num = function(f){var v = g(f).value.trim(); return v === "" ? null : Number(v)};
-  var row = {title:g("title").value.trim(), when_text:g("when_text").value.trim(), fee:num("fee")||0, slots:num("slots")||8, filled:num("filled")||0, prize1:num("prize1"), prize2:num("prize2"), active:g("active").checked};
-  b.disabled = true;
-  var r = await sb.from("tournaments").update(row).eq("id", Number(b.dataset.id));
-  b.disabled = false;
-  if(r.error){alert(r.error.message); return}
-  b.textContent = "Imehifadhiwa ✓"; setTimeout(function(){b.textContent = "Hifadhi"}, 1800);
-  loadTournaments();
-};
-$("t-new").onclick = async function(){
-  var c = await sb.from("tournaments").select("id", {count:"exact", head:true}), n = c.count || 0;
-  var r = await sb.from("tournaments").insert({title:"Kombe jipya", when_text:"Weka siku na saa", fee:1000, slots:8, theme:n%4, sort:n+1});
-  if(r.error){alert(r.error.message); return}
-  loadTours(); loadTournaments();
-};
-
-loadTournaments();
-
-/* ---------- Weka app kwenye simu (PWA) ---------- */
-var deferredInstall = null;
-function standalone(){return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone}
-window.addEventListener("beforeinstallprompt", function(e){e.preventDefault(); deferredInstall = e});
-window.addEventListener("appinstalled", function(){$("install").hidden = true});
-if(!standalone()){
-  $("install").hidden = false;
-  if(APK_URL){$("apk-btn").hidden = false; $("apk-btn").href = APK_URL; $("apk-btn").setAttribute("download", "")}
-}
-$("install-btn").onclick = async function(){
-  if(deferredInstall){deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; return}
-  $("install-msg").textContent = "Bonyeza vitone vitatu (⋮) vya Chrome juu kulia, kisha chagua \"Weka kwenye skrini ya kwanza\" au \"Install app\".";
-};
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function(){});
-
-/* ---------- Wadhamini ---------- */
-(function(){
-  var box = $("sponsors"), ok = function(u){return /^https?:\/\//.test(u||"")};
-  SPONSORS.forEach(function(p){
-    var a = document.createElement(ok(p.link) ? "a" : "div");
-    a.className = "card sp"; if(ok(p.link)){a.href = p.link; a.target = "_blank"; a.rel = "sponsored noopener"}
-    a.innerHTML = '<div class="in"><span class="sptag">Mdhamini</span><b>'+esc(p.name)+'</b><span class="meta" style="margin:0">'+esc(p.text)+'</span></div>';
-    box.appendChild(a);
-  });
-  var c = document.createElement("a");
-  c.className = "card sp"; c.target = "_blank"; c.rel = "noopener";
-  c.href = "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent("Habari! Nataka kutangaza biashara yangu kwenye Ligi ya eFootball.");
-  c.innerHTML = '<div class="in"><span class="sptag">Nafasi ya tangazo</span><b>Tangaza biashara yako hapa</b><span class="meta" style="margin:0">Wafikie wachezaji wote wa ligi. Wasiliana nasi WhatsApp.</span></div>';
-  box.appendChild(c);
-})();
-
-/* ---------- Gumzo ---------- */
-var IS_ADMIN = false, chTimer = null, chName = "";
-try{chName = localStorage.getItem("ligi_name") || ""}catch(e){}
-function chDevice(){
-  try{
-    var d = localStorage.getItem("ligi_dev");
-    if(!d){d = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2)+"-"+Date.now(); localStorage.setItem("ligi_dev", d)}
-    return d;
-  }catch(e){return "tmp-"+Math.random().toString(36).slice(2)+Date.now()}
-}
-function chShow(){
-  var need = !chName && !IS_ADMIN;
-  $("ch-namebox").hidden = !need;
-  $("ch-main").style.display = need ? "none" : "flex";
-}
-async function chLoad(forceBottom){
-  if(!sb) return;
-  var cols = IS_ADMIN ? "id,created_at,name,body,is_admin,device" : "id,created_at,name,body,is_admin";
-  var r = await sb.from("chat_messages").select(cols).order("id", {ascending:false}).limit(100);
-  if(r.error){$("ch-err").textContent = "Imeshindwa kupakia gumzo."; return}
-  var box = $("ch-list"), near = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-  var rows = r.data.slice().reverse();
-  box.innerHTML = rows.length ? rows.map(function(m){
-    var me = !m.is_admin && chName && m.name === chName;
-    var t = new Date(m.created_at).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-    var mod = IS_ADMIN ? '<div class="mod"><button class="ghost" data-del="'+m.id+'">Futa</button>'+(m.device && !m.is_admin ? '<button class="ghost" data-ban="'+esc(m.device)+'">Zuia</button>' : '')+'</div>' : "";
-    return '<div class="m'+(me?" me":"")+(m.is_admin?" adm":"")+'"><b>'+esc(m.name)+(m.is_admin?" (Admin)":"")+'</b>'+esc(m.body)+'<i>'+t+'</i>'+mod+'</div>';
-  }).join("") : '<p class="meta">Hakuna ujumbe bado. Anza mazungumzo!</p>';
-  if(near || forceBottom) box.scrollTop = box.scrollHeight;
-}
-function chOpen(){
-  if(!sb){alert("Gumzo halijaunganishwa bado."); return}
-  $("ch-err").textContent = ""; $("chat").showModal(); chShow();
-  chLoad(true); clearInterval(chTimer); chTimer = setInterval(function(){chLoad(false)}, 4000);
-}
-$("ch-open").onclick = chOpen; $("ch-open2").onclick = chOpen;
-$("ch-x").onclick = function(){$("chat").close()};
-$("chat").addEventListener("close", function(){clearInterval(chTimer)});
-$("ch-nok").onclick = function(){
-  var n = $("ch-name").value.trim();
-  if(n.length < 2 || n.length > 24){$("ch-nerr").textContent = "Jina liwe herufi 2 hadi 24."; return}
-  chName = n; try{localStorage.setItem("ligi_name", n)}catch(e){}
-  chShow(); chLoad(true);
-};
-async function chSend(){
-  var t = $("ch-input").value.trim(); if(!t) return;
-  var b = $("ch-send"); b.disabled = true;
-  var r = await sb.rpc("send_chat", {p_device:chDevice(), p_name:chName, p_body:t});
-  b.disabled = false;
-  if(r.error){$("ch-err").textContent = r.error.message; return}
-  $("ch-err").textContent = ""; $("ch-input").value = ""; chLoad(true);
-}
-$("ch-send").onclick = chSend;
-$("ch-input").addEventListener("keydown", function(e){if(e.key === "Enter"){e.preventDefault(); chSend()}});
-$("ch-list").onclick = async function(e){
-  var d = e.target.closest("[data-del]"), b = e.target.closest("[data-ban]");
-  if(d){
-    if(!confirm("Futa ujumbe huu?")) return;
-    var r = await sb.from("chat_messages").delete().eq("id", Number(d.dataset.del));
-    if(r.error) alert(r.error.message); else chLoad(false);
-  } else if(b){
-    if(!confirm("Mzuie mtumiaji huyu asitume ujumbe?")) return;
-    var r2 = await sb.from("chat_banned").insert({device:b.dataset.ban});
-    if(r2.error) alert(r2.error.message); else alert("Mtumiaji amezuiwa.");
-  }
-};
-
-/* ---------- Washiriki (hifadhi ya rekodi) ---------- */
+/* Washiriki (hifadhi ya rekodi) */
 var PT = [], PR = [];
 function ptour(){var id = Number($("p-t").value); return PT.filter(function(t){return t.id === id})[0]}
 async function loadPart(){
   var t = await sb.from("tournaments").select("id,title,fee,slots,prize1,prize2,round_no,sort").order("sort").order("id");
-  if(t.error){$("p-list").textContent = "Hitilafu: "+t.error.message+". Hakikisha SQL ya hifadhi imeendeshwa."; return}
+  if(t.error){$("p-list").textContent = "Hitilafu: "+t.error.message; return}
   PT = t.data;
   var keep = $("p-t").value;
   $("p-t").innerHTML = PT.map(function(x){return '<option value="'+x.id+'">'+esc(x.title)+'</option>'}).join("");
@@ -716,11 +818,11 @@ async function loadPart(){
 }
 function partRounds(reset){
   var t = ptour(); if(!t) return;
-  var cur = t.round_no || 1, opts = "";
-  for(var i = cur; i >= 1; i--) opts += '<option value="'+i+'">Raundi '+i+(i === cur ? " (sasa)" : "")+'</option>';
+  var c = t.round_no || 1, opts = "";
+  for(var i = c; i >= 1; i--) opts += '<option value="'+i+'">Raundi '+i+(i === c ? " (sasa)" : "")+'</option>';
   var keep = $("p-r").value;
   $("p-r").innerHTML = opts;
-  $("p-r").value = (!reset && keep && Number(keep) <= cur) ? keep : String(cur);
+  $("p-r").value = (!reset && keep && Number(keep) <= c) ? keep : String(c);
   partLoadRows();
 }
 async function partLoadRows(){
@@ -757,7 +859,6 @@ function partCard(x){
   if(x.status === "confirmed") h += '<button class="gold" data-paid="'+x.id+'" data-on="'+(x.prize_paid ? "0" : "1")+'">'+(x.prize_paid ? "Tengua malipo" : "Amelipwa zawadi")+'</button>';
   return h+'</div></div>';
 }
-$("tab-p").onclick = function(){tab("p")};
 $("p-t").onchange = function(){partRounds(true)};
 $("p-r").onchange = partLoadRows;
 $("p-s").onchange = partRender;
@@ -788,6 +889,184 @@ $("p-list").onclick = async function(e){
     partLoadRows();
   }
 };
+
+/* Wachezaji waliojisajili */
+var UR = [];
+async function loadUsers(){
+  $("u-list").innerHTML = '<p class="meta">Inapakia...</p>';
+  var r = await sb.from("profiles").select("*").order("created_at", {ascending:false}).limit(1000);
+  if(r.error){$("u-list").textContent = "Hitilafu: "+r.error.message+". Hakikisha SQL ya akaunti imeendeshwa."; return}
+  UR = r.data; usersRender();
+}
+function usersRender(){
+  var q = $("u-q").value.trim().toLowerCase();
+  var rows = UR.filter(function(x){return !q || (x.name+" "+x.phone+" "+localPhone(x.phone)).toLowerCase().indexOf(q) > -1});
+  $("u-sum").innerHTML = 'Waliojisajili: <b>'+UR.length+'</b>'+(q ? ' · Zilizopatikana: <b>'+rows.length+'</b>' : '');
+  $("u-list").innerHTML = rows.length ? rows.map(function(x){
+    return '<div class="req"><div class="rh"><b>'+esc(x.name)+'</b><span class="meta" style="margin:0">'+esc(new Date(x.created_at).toLocaleDateString())+'</span></div>'+
+      '<div>Simu: <b>'+esc(localPhone(x.phone))+'</b></div><div class="actions" style="margin-top:8px"><button class="ghost" data-cp="'+esc(localPhone(x.phone))+'">Nakili simu</button></div></div>';
+  }).join("") : '<p class="meta">Hakuna wachezaji.</p>';
+}
+$("u-q").oninput = usersRender;
+$("u-copy").onclick = function(){
+  var q = $("u-q").value.trim().toLowerCase();
+  var lines = UR.filter(function(x){return !q || (x.name+" "+x.phone).toLowerCase().indexOf(q) > -1}).map(function(x){return x.name+" | "+localPhone(x.phone)});
+  copyText("Wachezaji waliojisajili ("+lines.length+")\n"+lines.join("\n"), this, "Nakili orodha");
+};
+$("u-list").onclick = function(e){var c = e.target.closest("[data-cp]"); if(c) copyText(c.dataset.cp, c, "Nakili simu")};
+
+/* Habari */
+async function loadNewsAdmin(){
+  var box = $("n-list"); box.innerHTML = '<p class="meta">Inapakia...</p>';
+  var r = await sb.from("news").select("*").order("created_at", {ascending:false}).limit(30);
+  if(r.error){box.textContent = "Hitilafu: "+r.error.message+". Hakikisha SQL ya habari imeendeshwa."; return}
+  box.innerHTML = r.data.length ? r.data.map(function(n){
+    return '<div class="req"><div class="rh"><b>'+esc(n.title)+'</b><span class="meta" style="margin:0">'+esc(new Date(n.created_at).toLocaleDateString())+'</span></div>'+
+      '<div class="nbody meta">'+esc(n.body)+'</div>'+(n.image_url ? '<div class="meta">Ina picha</div>' : '')+
+      '<div class="actions" style="margin-top:8px"><button class="ghost" data-deln="'+n.id+'">Futa</button></div></div>';
+  }).join("") : '<p class="meta">Hakuna habari bado.</p>';
+}
+$("n-add").onclick = async function(){
+  var title = $("n-title").value.trim(), body = $("n-body").value.trim(), f = $("n-img").files[0], b = this;
+  if(!title){$("n-err").textContent = "Weka kichwa cha habari."; return}
+  b.disabled = true; $("n-err").textContent = "Inapakia...";
+  try{
+    var url = f ? await uploadImage(f, "news") : null;
+    var r = await sb.from("news").insert({title:title, body:body, image_url:url});
+    if(r.error) throw r.error;
+    $("n-title").value = ""; $("n-body").value = ""; $("n-img").value = ""; $("n-err").textContent = "";
+    loadNewsAdmin(); loadNews();
+  }catch(e){showErr("n-err", e)}
+  b.disabled = false;
+};
+$("n-list").onclick = async function(e){
+  var d = e.target.closest("[data-deln]"); if(!d) return;
+  if(!confirm("Futa habari hii?")) return;
+  var r = await sb.from("news").delete().eq("id", Number(d.dataset.deln));
+  if(r.error) alert(r.error.message); else {loadNewsAdmin(); loadNews()}
+};
+
+/* Washindi */
+async function loadWinAdmin(){
+  var t = await sb.from("tournaments").select("title").order("sort");
+  if(!t.error) $("w-tl").innerHTML = t.data.map(function(x){return '<option value="'+esc(x.title)+'">'}).join("");
+  var box = $("w-list"); box.innerHTML = '<p class="meta">Inapakia...</p>';
+  var r = await sb.from("winners").select("*").order("created_at", {ascending:false}).limit(30);
+  if(r.error){box.textContent = "Hitilafu: "+r.error.message+". Hakikisha SQL ya picha imeendeshwa."; return}
+  box.innerHTML = r.data.length ? r.data.map(function(w){
+    return '<div class="req"><div class="rh"><b>'+esc(w.winner_name)+'</b><span class="meta" style="margin:0">'+esc(new Date(w.created_at).toLocaleDateString())+'</span></div>'+
+      '<div class="meta">'+esc(w.tournament_title)+(w.prize_text ? ' · '+esc(w.prize_text) : '')+'</div>'+
+      '<div class="actions" style="margin-top:8px"><button class="ghost" data-delw="'+w.id+'">Futa</button></div></div>';
+  }).join("") : '<p class="meta">Hakuna washindi bado.</p>';
+}
+$("w-add").onclick = async function(){
+  var tt = $("w-t").value.trim(), nm = $("w-n").value.trim(), pz = $("w-p").value.trim(), f = $("w-img").files[0], b = this;
+  if(!tt || !nm || !f){$("w-err").textContent = "Jaza kombe, jina la mshindi na uchague picha."; return}
+  b.disabled = true; $("w-err").textContent = "Inapakia...";
+  try{
+    var url = await uploadImage(f, "winners");
+    var r = await sb.from("winners").insert({tournament_title:tt, winner_name:nm, prize_text:pz||null, image_url:url});
+    if(r.error) throw r.error;
+    $("w-n").value = ""; $("w-p").value = ""; $("w-img").value = ""; $("w-err").textContent = "";
+    loadWinAdmin(); loadWinners();
+  }catch(e){showErr("w-err", e)}
+  b.disabled = false;
+};
+$("w-list").onclick = async function(e){
+  var d = e.target.closest("[data-delw]"); if(!d) return;
+  if(!confirm("Futa mshindi huyu kwenye orodha?")) return;
+  var r = await sb.from("winners").delete().eq("id", Number(d.dataset.delw));
+  if(r.error) alert(r.error.message); else {loadWinAdmin(); loadWinners()}
+};
+
+/* Mashindano */
+async function loadTours(){
+  var box = $("a-tours"); box.innerHTML = '<p class="meta">Inapakia...</p>';
+  var r = await sb.from("tournaments").select("*").order("sort").order("id");
+  if(r.error){box.textContent = "Hitilafu: "+r.error.message; return}
+  box.innerHTML = r.data.map(function(t){return `<div class="req" data-tid="${t.id}">
+    ${t.image_url ? `<img class="aimg" src="${esc(t.image_url)}" alt="">` : ""}
+    <label>Jina la kombe</label><input data-f="title" value="${esc(t.title)}">
+    <label>Siku na saa</label><input data-f="when_text" value="${esc(t.when_text)}">
+    <div class="two"><div><label>Ada (0 = bure)</label><input data-f="fee" type="number" inputmode="numeric" value="${t.fee}"></div>
+    <div><label>Idadi ya timu</label><input data-f="slots" type="number" inputmode="numeric" value="${t.slots}"></div></div>
+    <div class="two"><div><label>Waliojiunga (filled)</label><input data-f="filled" type="number" inputmode="numeric" value="${t.filled}"></div>
+    <div><label>Zawadi wa 1 (hiari)</label><input data-f="prize1" type="number" inputmode="numeric" value="${t.prize1 == null ? "" : t.prize1}"></div></div>
+    <div class="two"><div><label>Zawadi wa 2 (hiari)</label><input data-f="prize2" type="number" inputmode="numeric" value="${t.prize2 == null ? "" : t.prize2}"></div>
+    <div><label>Linaonekana?</label><input data-f="active" type="checkbox" ${t.active ? "checked" : ""}></div></div>
+    <label>Badilisha picha ya kombe</label><input data-f="img" type="file" accept="image/*">
+    ${t.image_url ? `<label><input data-f="rmimg" type="checkbox" style="margin-right:8px">Ondoa picha</label>` : ""}
+    <p class="note">Acha zawadi tupu kwa kombe la ada, zinahesabiwa zenyewe. Kwa kombe la bure weka zawadi wa 1 (na wa 2 = 0 kama yupo mmoja tu).</p>
+    <div class="err" data-f="err" role="alert"></div>
+    <div class="actions"><button class="gold" data-act="save" data-id="${t.id}">Hifadhi</button></div></div>`}).join("");
+}
+$("a-tours").onclick = async function(e){
+  var b = e.target.closest("button[data-act=save]"); if(!b) return;
+  var box = b.closest("[data-tid]"), g = function(f){return box.querySelector('[data-f="'+f+'"]')};
+  var num = function(f){var v = g(f).value.trim(); return v === "" ? null : Number(v)};
+  var row = {title:g("title").value.trim(), when_text:g("when_text").value.trim(), fee:num("fee")||0, slots:num("slots")||8, filled:num("filled")||0, prize1:num("prize1"), prize2:num("prize2"), active:g("active").checked};
+  b.disabled = true; g("err").textContent = "";
+  try{
+    var f = g("img").files[0];
+    if(f) row.image_url = await uploadImage(f, "cups");
+    else if(g("rmimg") && g("rmimg").checked) row.image_url = null;
+    var r = await sb.from("tournaments").update(row).eq("id", Number(b.dataset.id));
+    if(r.error) throw r.error;
+    b.textContent = "Imehifadhiwa ✓"; setTimeout(function(){b.textContent = "Hifadhi"}, 1800);
+    loadTournaments(); if(f || row.image_url === null) loadTours();
+  }catch(er){showErr_(g("err"), er)}
+  b.disabled = false;
+};
+function showErr_(el, e){el.textContent = (e && e.message) ? e.message : String(e)}
+$("nt-add").onclick = async function(){
+  var title = $("nt-title").value.trim(), when = $("nt-when").value.trim(), fee = Number($("nt-fee").value)||0, slots = Number($("nt-slots").value)||8, f = $("nt-img").files[0], b = this;
+  if(!title || !when){$("nt-err").textContent = "Weka jina la kombe na siku na saa."; return}
+  b.disabled = true; $("nt-err").textContent = "Inapakia...";
+  try{
+    var url = f ? await uploadImage(f, "cups") : null;
+    var c = await sb.from("tournaments").select("id", {count:"exact", head:true}), n = c.count || 0;
+    var r = await sb.from("tournaments").insert({title:title, when_text:when, fee:fee, slots:slots, theme:n%4, sort:n+1, image_url:url});
+    if(r.error) throw r.error;
+    $("nt-title").value = ""; $("nt-when").value = ""; $("nt-img").value = ""; $("nt-err").textContent = "";
+    loadTours(); loadTournaments();
+  }catch(e){showErr("nt-err", e)}
+  b.disabled = false;
+};
+
+/* ---------- Weka app kwenye simu (PWA) ---------- */
+var deferredInstall = null;
+function standalone(){return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone}
+window.addEventListener("beforeinstallprompt", function(e){e.preventDefault(); deferredInstall = e});
+window.addEventListener("appinstalled", function(){$("install").hidden = true});
+if(!standalone()){
+  $("install").hidden = false;
+  if(APK_URL){$("apk-btn").hidden = false; $("apk-btn").href = APK_URL; $("apk-btn").setAttribute("download", "")}
+}
+$("install-btn").onclick = async function(){
+  if(deferredInstall){deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; return}
+  $("install-msg").textContent = "Bonyeza vitone vitatu (⋮) vya Chrome juu kulia, kisha chagua \"Weka kwenye skrini ya kwanza\" au \"Install app\".";
+};
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function(){});
+
+/* ---------- Wadhamini ---------- */
+(function(){
+  var box = $("sponsors"), ok = function(u){return /^https?:\/\//.test(u||"")};
+  SPONSORS.forEach(function(p){
+    var a = document.createElement(ok(p.link) ? "a" : "div");
+    a.className = "card sp"; if(ok(p.link)){a.href = p.link; a.target = "_blank"; a.rel = "sponsored noopener"}
+    a.innerHTML = '<div class="in"><span class="sptag">Mdhamini</span><b>'+esc(p.name)+'</b><span class="meta" style="margin:0">'+esc(p.text)+'</span></div>';
+    box.appendChild(a);
+  });
+  var c = document.createElement("a");
+  c.className = "card sp"; c.target = "_blank"; c.rel = "noopener";
+  c.href = "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent("Habari! Nataka kutangaza biashara yangu kwenye Ligi ya eFootball.");
+  c.innerHTML = '<div class="in"><span class="sptag">Nafasi ya tangazo</span><b>Tangaza biashara yako hapa</b><span class="meta" style="margin:0">Wafikie wachezaji wote wa ligi. Wasiliana nasi WhatsApp.</span></div>';
+  box.appendChild(c);
+})();
+
+/* ---------- Anza ---------- */
+loadTournaments(); loadNews(); loadWinners();
+initAuth();
 </script>
 </body>
 </html>
