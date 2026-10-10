@@ -132,6 +132,8 @@ details.whist{margin-top:10px}
 .txr{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
 .pos{color:#15803d}.neg{color:#b91c1c}
 @media (prefers-color-scheme:dark){.pos{color:#4ade80}.neg{color:#f87171}}
+.wsub{color:#fff;opacity:.92;font-size:14px;margin:-6px 0 8px}
+.wlock{font-size:13px;color:#ffd34d;margin:0 0 12px}
 </style>
 </head>
 <body>
@@ -144,10 +146,23 @@ details.whist{margin-top:10px}
     <div class="wcard">
       <div class="wl">Salio lako</div>
       <div class="wbal" id="w-bal">TSh 0</div>
+      <div class="wsub" id="w-sub"></div>
+      <div class="wlock" id="w-lock"></div>
       <div class="wbtns"><button class="gold" id="w-dep">Weka pesa</button><button class="ghost" id="w-wd">Toa pesa</button></div>
     </div>
     <div id="w-pend"></div>
     <details class="whist"><summary>Historia ya miamala</summary><div id="w-tx"></div></details>
+  </section>
+
+  <section id="ref-sec" hidden>
+    <h2>Alika wachezaji</h2>
+    <div class="card"><div class="in">
+      <p class="meta">Unapata 10% ya amana ya kwanza ya unayemwalika, na 2% ya kila amana yake ndani ya miezi 3. Kamisheni inaingia mwalikwa akishacheza ada za nusu ya amana zake. Kutoa kamisheni kunahitaji uwe umecheza angalau kombe moja ndani ya miezi 3. Hii ni zawadi ya kuleta wachezaji wanaocheza kweli, si ahadi ya kipato.</p>
+      <input id="r-link" readonly>
+      <div class="two" style="margin-top:8px"><button class="gold" id="r-copy">Nakili link</button><button class="ghost" id="r-share">Tuma WhatsApp</button></div>
+      <div id="r-stats" class="meta" style="margin-top:10px"></div>
+      <details style="margin-top:8px"><summary>Waliowalika</summary><div id="r-list"></div></details>
+    </div></div>
   </section>
 
   <header class="hero">
@@ -205,6 +220,7 @@ details.whist{margin-top:10px}
   <div id="au-name-box" hidden><label for="au-name">Jina lako</label><input id="au-name" maxlength="30" autocomplete="name"></div>
   <label for="au-phone">Namba ya simu</label><input id="au-phone" inputmode="tel" autocomplete="username" placeholder="07XXXXXXXX">
   <label for="au-pass">Nenosiri (angalau herufi 6)</label><input id="au-pass" type="password" autocomplete="current-password">
+  <p class="note" id="au-ref" hidden style="margin:8px 0 0"></p>
   <div class="err" id="au-err" role="alert"></div>
   <div class="actions">
     <button class="ghost" id="au-close" hidden>Funga</button>
@@ -267,6 +283,8 @@ details.whist{margin-top:10px}
 <dialog id="wd">
   <h2>Toa pesa</h2>
   <div class="pay"><div><span>Salio lako</span><b id="wd-bal"></b></div></div>
+  <label for="wd-src" style="margin-top:12px">Toa kutoka</label><select id="wd-src"></select>
+  <div class="meta" id="wd-note" style="margin-top:8px"></div>
   <label for="wd-amt">Kiasi cha kutoa (TSh, kuanzia 1,000)</label><input id="wd-amt" type="number" inputmode="numeric">
   <label for="wd-net">Mtandao wa kupokea</label><select id="wd-net"><option value="">Chagua mtandao</option><option>Tigo Pesa</option><option>M-Pesa</option><option>Airtel Money</option><option>HaloPesa</option></select>
   <label for="wd-phone">Namba ya kupokea pesa</label><input id="wd-phone" inputmode="tel" autocomplete="tel">
@@ -302,6 +320,7 @@ details.whist{margin-top:10px}
     <div class="tabs">
       <button class="gold" id="tab-d">Amana</button>
       <button class="ghost" id="tab-x">Utoaji</button>
+      <button class="ghost" id="tab-m">Mialiko</button>
       <button class="ghost" id="tab-p">Washiriki</button>
       <button class="ghost" id="tab-u">Wachezaji</button>
       <button class="ghost" id="tab-n">Habari</button>
@@ -327,6 +346,10 @@ details.whist{margin-top:10px}
         <button class="ghost" id="x-ref">Onyesha upya</button>
       </div>
       <div id="a-wds"></div>
+    </div>
+
+    <div id="v-m" hidden>
+      <div id="a-refs"></div>
     </div>
 
     <div id="v-p" hidden>
@@ -475,6 +498,9 @@ async function uploadImage(file, folder){
 }
 
 /* ---------- Akaunti (namba ya simu + nenosiri) ---------- */
+var SITE_URL = "https://efootballligi.github.io/ligi/";
+try{var mr = location.search.match(/[?&]ref=([A-Za-z0-9]{3,12})/); if(mr) localStorage.setItem("ligi_ref", mr[1].toUpperCase())}catch(e){}
+function savedRef(){try{return localStorage.getItem("ligi_ref") || ""}catch(e){return ""}}
 var auMode = "in";
 function auSet(mode){
   auMode = mode;
@@ -484,6 +510,7 @@ function auSet(mode){
   $("au-go").textContent = mode === "in" ? "Ingia" : "Jisajili";
   $("au-pass").autocomplete = mode === "in" ? "current-password" : "new-password";
   $("au-err").textContent = "";
+  var rf = savedRef(); $("au-ref").hidden = !(mode === "up" && rf); $("au-ref").textContent = "Umealikwa kwa code: "+rf;
 }
 function openAuth(gate){
   GATE = !!gate; $("au-close").hidden = GATE;
@@ -504,7 +531,7 @@ $("au-go").onclick = async function(){
   b.disabled = true; $("au-err").textContent = "";
   try{
     if(auMode === "up"){
-      var r = await sb.auth.signUp({email:email, password:pass, options:{data:{name:name}}});
+      var r = await sb.auth.signUp({email:email, password:pass, options:{data:{name:name, ref:savedRef()}}});
       if(r.error){
         if(/registered|exists/i.test(r.error.message)) throw new Error("Namba hii tayari imesajiliwa. Bonyeza Ingia.");
         throw r.error;
@@ -639,18 +666,25 @@ setInterval(function(){if(ME && !IS_ADMIN && !document.hidden) loadMine()}, 2000
 
 /* ---------- Salio (dashboard) ---------- */
 var BAL = 0, MIN_DEP = 500, MIN_WD = 1000, depWarn = false;
-var KIND = {deposit:"Amana", withdrawal:"Kutoa pesa", entry:"Ada ya kombe", prize:"Zawadi", refund:"Marejesho", adjust:"Marekebisho"};
+var KIND = {deposit:"Amana", withdrawal:"Kutoa pesa", entry:"Ada ya kombe", prize:"Zawadi", refund:"Marejesho", adjust:"Marekebisho", commission:"Kamisheni"};
+var REF = {code:"", refBal:0, lock:0, deposited:0, spent:0, pending:0};
+function availNow(){return Math.max(0, BAL - REF.lock)}
 async function loadWallet(){
-  var sec = $("wallet");
-  if(!sb || !ME || IS_ADMIN){sec.hidden = true; return}
-  sec.hidden = false;
-  var p = await sb.from("profiles").select("name,phone,balance").eq("user_id", ME.id).maybeSingle();
-  if(p.data){PROFILE = p.data; BAL = p.data.balance || 0}
+  var sec = $("wallet"), rs = $("ref-sec");
+  if(!sb || !ME || IS_ADMIN){sec.hidden = true; rs.hidden = true; return}
+  sec.hidden = false; rs.hidden = false;
+  var p = await sb.from("profiles").select("name,phone,balance,ref_code,ref_balance,locked_dep,total_deposited,total_spent").eq("user_id", ME.id).maybeSingle();
+  if(p.data){
+    PROFILE = p.data; BAL = p.data.balance || 0; REF.code = p.data.ref_code || ""; REF.refBal = p.data.ref_balance || 0;
+    REF.lock = p.data.locked_dep || 0; REF.deposited = p.data.total_deposited || 0; REF.spent = p.data.total_spent || 0;
+  }
   $("w-bal").textContent = fmt(BAL);
   var r = await Promise.all([
     sb.from("wallet_tx").select("id,created_at,kind,amount,note").order("id", {ascending:false}).limit(15),
     sb.from("deposits").select("id,amount").eq("user_id", ME.id).eq("status", "pending"),
-    sb.from("withdrawals").select("id,amount").eq("user_id", ME.id).eq("status", "pending")
+    sb.from("withdrawals").select("id,amount").eq("user_id", ME.id).eq("status", "pending"),
+    sb.from("referral_commissions").select("amount,status").eq("inviter_id", ME.id),
+    sb.rpc("my_referrals")
   ]);
   var pend = [];
   (r[1].data || []).forEach(function(d){pend.push("Ombi la kuweka "+fmt(d.amount)+" linasubiri uthibitisho wa admin.")});
@@ -660,8 +694,25 @@ async function loadWallet(){
   $("w-tx").innerHTML = tx.length ? tx.map(function(x){
     return '<div class="txr"><div><b>'+esc(KIND[x.kind] || x.kind)+'</b><div class="meta" style="margin:0">'+esc(x.note || "")+' · '+esc(new Date(x.created_at).toLocaleDateString())+'</div></div><b class="'+(x.amount > 0 ? "pos" : "neg")+'">'+(x.amount > 0 ? "+" : "-")+fmt(Math.abs(x.amount))+'</b></div>';
   }).join("") : '<p class="meta">Hakuna miamala bado.</p>';
+  var comm = r[3].data || [], pendSum = 0, earned = 0;
+  comm.forEach(function(c){if(c.status === "pending") pendSum += c.amount; if(c.status !== "cancelled") earned += c.amount});
+  REF.pending = pendSum;
+  $("w-sub").innerHTML = 'Kamisheni: <b>'+fmt(REF.refBal)+'</b>'+(pendSum ? ' · Zinazosubiri: '+fmt(pendSum) : '');
+  var need = Math.max(0, Math.ceil(REF.deposited*0.5) - REF.spent);
+  $("w-lock").textContent = REF.lock > 0 ? "Unaweza kutoa sasa: "+fmt(availNow())+". Pesa uliyoweka inafunguka ukicheza ada za "+fmt(need)+" zaidi." : "";
+  var link = SITE_URL+"?ref="+REF.code, refs = r[4].data || [];
+  $("r-link").value = REF.code ? link : "";
+  $("r-stats").innerHTML = 'Waliowalika: <b>'+refs.length+'</b> · Walioweka pesa: <b>'+refs.filter(function(x){return x.deposited}).length+'</b><br>Kamisheni zilizopatikana: <b>'+fmt(earned)+'</b>';
+  $("r-list").innerHTML = refs.length ? refs.map(function(x){
+    return '<div class="txr"><span>'+esc(x.name)+'</span><span class="meta" style="margin:0">'+(x.deposited ? "ameweka pesa" : "bado")+' · '+esc(new Date(x.joined).toLocaleDateString())+'</span></div>';
+  }).join("") : '<p class="meta">Bado hujamwalika mtu.</p>';
   render();
 }
+$("r-copy").onclick = function(){if($("r-link").value) copyText($("r-link").value, this, "Nakili link")};
+$("r-share").onclick = function(){
+  if(!$("r-link").value) return;
+  window.open("https://wa.me/?text="+encodeURIComponent("Jiunge na Ligi ya eFootball: mashindano yenye zawadi! Jisajili hapa: "+$("r-link").value), "_blank");
+};
 setInterval(function(){if(ME && !IS_ADMIN && !document.hidden) loadWallet()}, 20000);
 
 /* Kujiunga na kombe (inakata salio kama kuna ada) */
@@ -727,17 +778,24 @@ $("w-wd").onclick = function(){
   if(!ME){openAuth(false); return}
   if(IS_ADMIN){alert("Ingia kwa akaunti ya mchezaji."); return}
   $("wd-bal").textContent = fmt(BAL); $("wd-amt").value = "";
+  $("wd-src").innerHTML = '<option value="balance">Salio (unaweza kutoa '+fmt(availNow())+')</option><option value="commission">Kamisheni ('+fmt(REF.refBal)+')</option>';
+  var need = Math.max(0, Math.ceil(REF.deposited*0.5) - REF.spent);
+  $("wd-note").textContent = REF.lock > 0 ? "Pesa uliyoweka imefungwa hadi ucheze ada za "+fmt(need)+" zaidi. Kutoa kamisheni kunahitaji uwe umecheza angalau kombe moja ndani ya miezi 3." : "Kutoa kamisheni kunahitaji uwe umecheza angalau kombe moja ndani ya miezi 3.";
   if(!$("wd-phone").value) $("wd-phone").value = PROFILE ? localPhone(PROFILE.phone) : "";
   $("wd-err").textContent = ""; openD($("wd"));
 };
 $("wd-x").onclick = function(){$("wd").close()};
 $("wd-send").onclick = async function(){
-  var amt = Number($("wd-amt").value), net = $("wd-net").value, ph = $("wd-phone").value.trim();
+  var amt = Number($("wd-amt").value), net = $("wd-net").value, ph = $("wd-phone").value.trim(), src = $("wd-src").value;
+  var limit = src === "commission" ? REF.refBal : availNow();
   if(!(amt >= MIN_WD)){$("wd-err").textContent = "Kiwango cha chini cha kutoa ni "+fmt(MIN_WD)+"."; return}
-  if(amt > BAL){$("wd-err").textContent = "Salio lako halitoshi."; return}
+  if(amt > limit){
+    $("wd-err").textContent = src === "commission" ? "Kamisheni haitoshi." : (amt > BAL ? "Salio halitoshi." : "Unaweza kutoa hadi "+fmt(limit)+" tu sasa. Pesa uliyoweka inafunguka ukicheza ada za nusu yake.");
+    return;
+  }
   if(!net || cleanPhone(ph).length < 9){$("wd-err").textContent = "Chagua mtandao na uweke namba ya kupokea."; return}
   var b = this; b.disabled = true; b.textContent = "Inatuma...";
-  var r = await sb.rpc("request_withdrawal", {p_amount:amt, p_network:net, p_phone:cleanPhone(ph)});
+  var r = await sb.rpc("request_withdrawal", {p_amount:amt, p_network:net, p_phone:cleanPhone(ph), p_source:src});
   b.disabled = false; b.textContent = "Tuma ombi";
   if(r.error){$("wd-err").textContent = r.error.message; return}
   $("wd").close(); loadWallet();
@@ -814,7 +872,7 @@ $("a-in").onclick = async function(){
   $("a-pass").value = ""; ME = r.data.user; IS_ADMIN = true; showPanel();
 };
 $("a-out").onclick = async function(){await sb.auth.signOut(); $("adm").close()};
-var TABS = ["d","x","p","u","n","w","t"];
+var TABS = ["d","x","m","p","u","n","w","t"];
 function showPanel(){
   $("a-login").hidden = true; $("a-panel").hidden = false; tab("d");
   clearInterval(poll);
@@ -823,7 +881,7 @@ function showPanel(){
 $("adm").addEventListener("close", function(){clearInterval(poll)});
 function tab(w){
   TABS.forEach(function(k){$("v-"+k).hidden = (w !== k); $("tab-"+k).className = w === k ? "gold" : "ghost"});
-  ({d:loadDeps, x:loadWds, p:loadPart, u:loadUsers, n:loadNewsAdmin, w:loadWinAdmin, t:loadTours})[w]();
+  ({d:loadDeps, x:loadWds, m:loadRefs, p:loadPart, u:loadUsers, n:loadNewsAdmin, w:loadWinAdmin, t:loadTours})[w]();
 }
 TABS.forEach(function(k){$("tab-"+k).onclick = function(){tab(k)}});
 
@@ -913,6 +971,30 @@ $("a-wds").onclick = async function(e){
 $("x-pend").onclick = function(){wdAll = false; $("x-pend").className = "gold"; $("x-all").className = "ghost"; loadWds()};
 $("x-all").onclick = function(){wdAll = true; $("x-all").className = "gold"; $("x-pend").className = "ghost"; loadWds()};
 $("x-ref").onclick = function(){loadWds()};
+
+/* Mialiko (kamisheni) */
+async function loadRefs(){
+  var box = $("a-refs"); box.innerHTML = '<p class="meta">Inapakia...</p>';
+  var r = await sb.from("referral_commissions").select("*, inviter:profiles!inviter_id(name,phone), invitee:profiles!invitee_id(name)").order("created_at", {ascending:false}).limit(100);
+  if(r.error){box.textContent = "Hitilafu: "+r.error.message+". Hakikisha SQL ya mialiko imeendeshwa."; return}
+  var pend = 0, rel = 0;
+  r.data.forEach(function(c){if(c.status === "pending") pend += c.amount; else if(c.status === "released") rel += c.amount});
+  box.innerHTML = '<div class="meta">Zinazosubiri: <b>'+fmt(pend)+'</b> · Zilizoachiliwa: <b>'+fmt(rel)+'</b></div>' + (r.data.length ? r.data.map(function(c){
+    var st = {pending:"Inasubiri", released:"Imeachiliwa", cancelled:"Imefutwa"}[c.status], inv = c.inviter || {}, ive = c.invitee || {};
+    return '<div class="req"><div class="rh"><b>'+fmt(c.amount)+'</b><span class="badge '+(c.status === "released" ? "confirmed" : c.status === "cancelled" ? "rejected" : "pending")+'">'+st+'</span></div>'+
+      '<div>Mwalikaji: <b>'+esc(inv.name)+'</b> ('+esc(localPhone(inv.phone))+')</div>'+
+      '<div>Mwalikwa: <b>'+esc(ive.name)+'</b> · '+(c.kind === "first" ? "amana ya kwanza" : "amana inayofuata")+' ('+Math.round(c.pct*100*10)/10+'%)</div>'+
+      '<div class="meta">'+esc(new Date(c.created_at).toLocaleString())+'</div>'+
+      (c.status === "pending" ? '<div class="actions"><button class="ghost" data-cc="'+c.id+'">Futa kamisheni hii</button></div>' : '')+'</div>';
+  }).join("") : '<p class="meta">Hakuna kamisheni bado.</p>');
+}
+$("a-refs").onclick = async function(e){
+  var b = e.target.closest("[data-cc]"); if(!b) return;
+  if(!confirm("Futa kamisheni hii inayosubiri? Mwalikaji hatapata pesa hii.")) return;
+  var r = await sb.rpc("cancel_commission", {p_id:Number(b.dataset.cc)});
+  if(r.error){alert(r.error.message); return}
+  loadRefs();
+};
 
 /* Washiriki (hifadhi ya rekodi) */
 var PT = [], PR = [];
